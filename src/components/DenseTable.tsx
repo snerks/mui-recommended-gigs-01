@@ -8,7 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { ShowsInfo } from '../models/models';
-import { CircularProgress, LinearProgress } from '@material-ui/core';
+import { CircularProgress } from '@material-ui/core';
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -100,7 +100,7 @@ export default function DenseTable() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {showsInfo.shows.map((show) => (
+                        {showsInfo.shows.filter(show => new Date(show.date) >= new Date()).map((show) => (
                             <StyledTableRow key={Math.random()}>
                                 <StyledTableCell >{getDayName(show.date)}</StyledTableCell>
                                 <StyledTableCell>{getDateFormatted(show.date)}</StyledTableCell>

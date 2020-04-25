@@ -2,13 +2,12 @@ import React, { useState } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { blue } from "@material-ui/core/colors";
 
-import Header from "./components/Header";
-import { createMuiTheme, ThemeProvider, Paper, Grid } from '@material-ui/core';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 import Home from "./components/Home";
 import GigList from "./components/GigList";
 
 const App: React.FC = () => {
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode] = useState(true);
 
   const theme = createMuiTheme({
     palette: {

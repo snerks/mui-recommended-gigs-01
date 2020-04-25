@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Paper, Grid, createMuiTheme, ThemeProvider, Table } from "@material-ui/core";
+import { Paper, Grid, createMuiTheme, ThemeProvider } from "@material-ui/core";
 import Header from "./Header";
 import { blue } from "@material-ui/core/colors";
 import DenseTable from "./DenseTable";
