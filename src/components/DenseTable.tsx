@@ -8,7 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { ShowsInfo } from '../models/models';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress, Backdrop } from '@material-ui/core';
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -88,32 +88,34 @@ export default function DenseTable() {
     }, []);
 
     return (
-        isLoading ? <CircularProgress color="secondary" size={200} /> : (
-            <TableContainer component={Paper}>
-                <Table className={classes.table} size="small" aria-label="a dense table">
-                    <TableHead>
-                        <TableRow>
-                            <StyledTableCell>Day</StyledTableCell>
-                            <StyledTableCell>Date</StyledTableCell>
-                            <StyledTableCell>Artists</StyledTableCell>
-                            <StyledTableCell>Venue</StyledTableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {showsInfo.shows.filter(show => new Date(show.date) >= new Date()).map((show) => (
-                            <StyledTableRow key={Math.random()}>
-                                <StyledTableCell >{getDayName(show.date)}</StyledTableCell>
-                                <StyledTableCell>{getDateFormatted(show.date)}</StyledTableCell>
-                                <StyledTableCell component="th" scope="row">
-                                    {/* <pre>
+        isLoading ? (<Backdrop open={true}>
+            <CircularProgress color="inherit" />
+        </Backdrop>) : (
+                <TableContainer component={Paper}>
+                    <Table className={classes.table} size="small" aria-label="a dense table">
+                        <TableHead>
+                            <TableRow>
+                                <StyledTableCell>Day</StyledTableCell>
+                                <StyledTableCell>Date</StyledTableCell>
+                                <StyledTableCell>Artists</StyledTableCell>
+                                <StyledTableCell>Venue</StyledTableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {showsInfo.shows.filter(show => new Date(show.date) >= new Date()).map((show) => (
+                                <StyledTableRow key={Math.random()}>
+                                    <StyledTableCell >{getDayName(show.date)}</StyledTableCell>
+                                    <StyledTableCell>{getDateFormatted(show.date)}</StyledTableCell>
+                                    <StyledTableCell component="th" scope="row">
+                                        {/* <pre>
                                     {JSON.stringify(show, null, 2)}
                                 </pre> */}
-                                    {show.artists.map(artist => {
-                                        return (
-                                            <p key={`${show.id}.${artist.name}`}>
-                                                {artist.name}
+                                        {show.artists.map(artist => {
+                                            return (
+                                                <p key={`${show.id}.${artist.name}`}>
+                                                    {artist.name}
 
-                                                {/* <span *ngIf="artist.stageTime"
+                                                    {/* <span *ngIf="artist.stageTime"
                                           class="badge badge-pill badge-primary"
                                           style="margin-right: 10px;"
                                           title="Stage Time">
@@ -127,16 +129,16 @@ export default function DenseTable() {
                                             Video
                                           </span>
                                         </a> */}
-                                            </p>
-                                        );
-                                    })}
-                                </StyledTableCell>
-                                <StyledTableCell>{show.venue}</StyledTableCell>
-                            </StyledTableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        )
+                                                </p>
+                                            );
+                                        })}
+                                    </StyledTableCell>
+                                    <StyledTableCell>{show.venue}</StyledTableCell>
+                                </StyledTableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            )
     );
 }
