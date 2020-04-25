@@ -23,14 +23,7 @@ const GigList: React.FC = () => {
                     <Grid item>
                         <Header isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
                     </Grid>
-                    <Grid item container>
-                        <Grid item>
-                            <div style={{ margin: 30 }}>
-                                Gig List
-                            </div>
-                        </Grid>
-                    </Grid>
-                    <Grid item container>
+                    <Grid item container justify="center">
                         <DenseTable />
                     </Grid>
                 </Grid>
