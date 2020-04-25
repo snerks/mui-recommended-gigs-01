@@ -1,0 +1,42 @@
+import React, { useState } from "react";
+import { Paper, Grid, createMuiTheme, ThemeProvider, Table } from "@material-ui/core";
+import Header from "./Header";
+import { blue } from "@material-ui/core/colors";
+import DenseTable from "./DenseTable";
+
+const GigList: React.FC = () => {
+    const [isDarkMode, setIsDarkMode] = useState(true);
+
+    const theme = createMuiTheme({
+        palette: {
+            type: isDarkMode ? "dark" : "light",
+
+            primary: blue,
+            secondary: blue,
+        },
+    });
+
+    return (
+        <ThemeProvider theme={theme}>
+            <Paper elevation={0} square style={{ height: "100%" }}>
+                <Grid container direction="column">
+                    <Grid item>
+                        <Header isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+                    </Grid>
+                    <Grid item container>
+                        <Grid item>
+                            <div style={{ margin: 30 }}>
+                                Gig List
+                            </div>
+                        </Grid>
+                    </Grid>
+                    <Grid item container>
+                        <DenseTable />
+                    </Grid>
+                </Grid>
+            </Paper>
+        </ThemeProvider>
+    )
+}
+
+export default GigList;

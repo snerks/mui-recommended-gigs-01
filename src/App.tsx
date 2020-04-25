@@ -1,25 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { blue } from "@material-ui/core/colors";
 
-function App() {
+import Header from "./components/Header";
+import { createMuiTheme, ThemeProvider, Paper, Grid } from '@material-ui/core';
+import Home from "./components/Home";
+import GigList from "./components/GigList";
+
+const App: React.FC = () => {
+  const [isDarkMode, setIsDarkMode] = useState(true);
+
+  const theme = createMuiTheme({
+    palette: {
+      type: isDarkMode ? "dark" : "light",
+
+      primary: blue,
+      secondary: blue,
+    },
+  });
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <BrowserRouter>
+        <Switch>
+          <Route path="/" exact component={Home} />
+          <Route path="/giglist" exact component={GigList} />
+          <Route path="/" render={() => <div>404</div>} />
+        </Switch>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 
