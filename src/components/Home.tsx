@@ -109,24 +109,24 @@ const Home: React.FC = () => {
                     </Grid>
                     {
                         isLoading ? <Backdrop open={true}><CircularProgress color="inherit" /></Backdrop> : (
-                            <Grid item container direction="column" spacing={2} alignItems="center">
+                            <Grid item container direction="column" spacing={2} justify="center" alignItems="stretch">
                                 <Grid item>
                                     <Button variant="contained" color="primary" component={Link} to={'/giglist'} fullWidth>
                                         Gig List {isLoading ? null : <span>&nbsp;({getAllShows().length})</span>}
                                     </Button>
                                 </Grid>
                                 <Grid item>
-                                    <Button variant="contained" color="secondary" component={Link} to={'/giglist'} >
+                                    <Button variant="contained" color="secondary" component={Link} to={'/giglist'} fullWidth>
                                         Added Today {isLoading ? null : <span>&nbsp;({getAddedTodayShows().length})</span>}
                                     </Button>
                                 </Grid>
                                 <Grid item>
-                                    <Button variant="contained" color="secondary" component={Link} to={'/giglist'} >
+                                    <Button variant="contained" color="secondary" component={Link} to={'/giglist'} fullWidth>
                                         Added In Last 3 Days {isLoading ? null : <span>&nbsp;({getAddedWithin3DaysShows().length})</span>}
                                     </Button>
                                 </Grid>
                                 <Grid item>
-                                    <Button variant="contained" color="secondary" component={Link} to={'/giglist'}>
+                                    <Button variant="contained" color="secondary" component={Link} to={'/giglist'} fullWidth>
                                         Added In Last 7 Days {isLoading ? null : <span>&nbsp;({getAddedWithin7DaysShows().length})</span>}
                                     </Button>
                                 </Grid>
