@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -8,7 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { ShowsInfo } from '../models/models';
-import { CircularProgress, Backdrop } from '@material-ui/core';
+import { CircularProgress, Backdrop, Chip, Grid } from '@material-ui/core';
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -35,7 +35,7 @@ const useStyles = makeStyles({
 });
 
 const getDayName = (date: Date) => {
-    return new Date(date).toLocaleDateString("en-GB", { weekday: 'long' });
+    return new Date(date).toLocaleDateString("en-GB", { weekday: 'short' });
 }
 
 const getDateFormatted = (date: Date) => {
@@ -45,6 +45,7 @@ const getDateFormatted = (date: Date) => {
 }
 
 export default function DenseTable() {
+    const theme = useTheme();
     const classes = useStyles();
     const [isLoading, setIsLoading] = useState(true);
 
@@ -99,14 +100,16 @@ export default function DenseTable() {
                                 <StyledTableCell>Date</StyledTableCell>
                                 <StyledTableCell>Artists</StyledTableCell>
                                 <StyledTableCell>Venue</StyledTableCell>
+                                <StyledTableCell>&nbsp;</StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {showsInfo.shows.filter(show => new Date(show.date) >= new Date()).map((show) => (
+                            {/* {showsInfo.shows.filter(show => new Date(show.date) >= new Date()).map((show) => ( */}
+                            {showsInfo.shows.filter(show => true).map((show) => (
                                 <StyledTableRow key={Math.random()}>
                                     <StyledTableCell >{getDayName(show.date)}</StyledTableCell>
                                     <StyledTableCell>{getDateFormatted(show.date)}</StyledTableCell>
-                                    <StyledTableCell component="th" scope="row">
+                                    <StyledTableCell>
                                         {/* <pre>
                                     {JSON.stringify(show, null, 2)}
                                 </pre> */}
@@ -134,6 +137,63 @@ export default function DenseTable() {
                                         })}
                                     </StyledTableCell>
                                     <StyledTableCell>{show.venue}</StyledTableCell>
+                                    <StyledTableCell>
+                                        <Grid container direction="column" spacing={1}>
+                                            {
+                                                show.isSoldOut &&
+                                                <Grid item>
+
+                                                    <Chip
+                                                        style={{
+                                                            backgroundColor: theme.palette.warning.main,
+                                                            color: theme.palette.warning.contrastText
+                                                        }} size="small" label="Sold Out" />
+                                                </Grid>
+
+                                            }
+                                            {
+                                                show.isCancelled &&
+                                                <Grid item>
+                                                    <Chip
+                                                        style={{
+                                                            backgroundColor: theme.palette.error.main,
+                                                            color: theme.palette.error.contrastText
+                                                        }} size="small" label="Cancelled" />
+                                                </Grid>
+                                            }
+                                            {
+                                                show.priceText && show.priceText.indexOf('£') === 0 &&
+                                                <Grid item>
+                                                    <Chip
+                                                        style={{
+                                                            backgroundColor: theme.palette.info.main,
+                                                            color: theme.palette.info.contrastText
+                                                        }} size="small" label={show.priceText} />
+                                                </Grid>
+                                            }
+                                            {
+                                                show.notes &&
+                                                <Grid item>
+                                                    <span
+                                                        style={{
+                                                            // backgroundColor: theme.palette.info.main,
+                                                            // color: theme.palette.info.contrastText
+                                                        }}>
+                                                        {show.notes}
+                                                    </span>
+                                                </Grid>
+                                            }
+                                        </Grid>
+
+                                        {/* 
+
+            <span *ngIf="show.priceText && show.priceText.indexOf('£') === 0"
+              class="badge badge-info" style="margin-right: 10px;">
+              {{show.priceText}}
+            </span>
+
+            <span *ngIf="show.notes" style="margin-right: 10px;">{{show.notes}}</span> */}
+                                    </StyledTableCell>
                                 </StyledTableRow>
                             ))}
                         </TableBody>
