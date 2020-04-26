@@ -23,7 +23,8 @@ const App: React.FC = () => {
         <Switch>
           <Route path="/" exact component={Home} />
           <Route path="/giglist" exact component={GigList} />
-          <Route path="/" render={() => <div>404</div>} />
+          {/* <Route path="/" render={() => <div>404</div>} /> */}
+          <Route path="/" render={() => <Home />} />
         </Switch>
       </BrowserRouter>
     </ThemeProvider>

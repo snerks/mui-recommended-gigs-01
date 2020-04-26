@@ -116,12 +116,12 @@ const Home: React.FC = () => {
                                     </Button>
                                 </Grid>
                                 <Grid item>
-                                    <Button variant="contained" color="secondary" component={Link} to={'/giglist'}>
+                                    <Button variant="contained" color="secondary" component={Link} to={'/giglist'} >
                                         Added Today {isLoading ? null : <span>&nbsp;({getAddedTodayShows().length})</span>}
                                     </Button>
                                 </Grid>
                                 <Grid item>
-                                    <Button variant="contained" color="secondary" component={Link} to={'/giglist'}>
+                                    <Button variant="contained" color="secondary" component={Link} to={'/giglist'} >
                                         Added In Last 3 Days {isLoading ? null : <span>&nbsp;({getAddedWithin3DaysShows().length})</span>}
                                     </Button>
                                 </Grid>
