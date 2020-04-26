@@ -92,11 +92,11 @@ export default function DenseTable() {
         isLoading ? (<Backdrop open={true}>
             <CircularProgress color="inherit" />
         </Backdrop>) : (
-                <TableContainer component={Paper}>
+                <TableContainer component={Paper} square>
                     <Table className={classes.table} size="small" aria-label="a dense table">
                         <TableHead>
                             <TableRow>
-                                <StyledTableCell>Day</StyledTableCell>
+                                {/* <StyledTableCell>Day</StyledTableCell> */}
                                 <StyledTableCell>Date</StyledTableCell>
                                 <StyledTableCell>Artists</StyledTableCell>
                                 <StyledTableCell>Venue</StyledTableCell>
@@ -105,9 +105,9 @@ export default function DenseTable() {
                         </TableHead>
                         <TableBody>
                             {/* {showsInfo.shows.filter(show => new Date(show.date) >= new Date()).map((show) => ( */}
-                            {showsInfo.shows.filter(show => true).map((show) => (
+                            {showsInfo.shows.filter(show => new Date(show.date) >= new Date()).map((show) => (
                                 <StyledTableRow key={Math.random()}>
-                                    <StyledTableCell >{getDayName(show.date)}</StyledTableCell>
+                                    {/* <StyledTableCell >{getDayName(show.date)}</StyledTableCell> */}
                                     <StyledTableCell>{getDateFormatted(show.date)}</StyledTableCell>
                                     <StyledTableCell>
                                         {/* <pre>
