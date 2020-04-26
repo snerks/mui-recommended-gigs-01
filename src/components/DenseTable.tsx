@@ -7,13 +7,15 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { ShowsInfo } from '../models/models';
-import { CircularProgress, Backdrop, Chip, Grid } from '@material-ui/core';
+import { ShowsInfo, Show } from '../models/models';
+import { CircularProgress, Backdrop, Chip, Grid, Hidden } from '@material-ui/core';
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
-        backgroundColor: theme.palette.common.black,
-        color: theme.palette.common.white,
+        // backgroundColor: theme.palette.common.black,
+        // color: theme.palette.common.white,
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
     },
     body: {
         fontSize: 14,
@@ -45,10 +47,18 @@ const getDateFormatted = (date: Date) => {
     return new Date(date).toLocaleDateString("en-GB", options);
 }
 
-export default function DenseTable() {
+interface Props {
+    showPastEvents: boolean;
+
+    days?: number;
+}
+
+const DenseTable: React.FC<Props> = (props) => {
     const theme = useTheme();
     const classes = useStyles();
     const [isLoading, setIsLoading] = useState(true);
+    const [showPastEvents, setShowPastEvents] = useState(props.showPastEvents);
+    const [days, setDays] = useState(props.days);
 
     const [showsInfo, setShowsInfo] = useState<ShowsInfo>({
         lastUpdated: new Date(),
@@ -89,6 +99,114 @@ export default function DenseTable() {
 
     }, []);
 
+    const isRecentlyAdded = (show: Show, thresholdInDays = 1) => {
+        if (!show.addedDate) {
+            return false;
+        }
+
+        const addedDate = new Date(show.addedDate);
+        const currentDate = new Date();
+
+        const millisecondsSinceAdded = currentDate.getTime() - addedDate.getTime();
+
+        const millisecondsPerDay = 1000 * 60 * 60 * 24;
+        const thresholdInMilliseconds = thresholdInDays * millisecondsPerDay;
+
+        const result = millisecondsSinceAdded < thresholdInMilliseconds;
+
+        return result;
+    };
+
+    const getInDateRangeShows = (): Show[] => {
+        if (!showsInfo) {
+            return [];
+        }
+
+        const { shows } = showsInfo;
+
+        if (showPastEvents) {
+            return shows;
+        }
+
+        const results = shows.filter(dateRangeShowFilter);
+
+        return results;
+    }
+
+    const isFutureEvent = (show: Show) => {
+        if (!show.date) {
+            return false;
+        }
+
+        const eventDate = new Date(show.date);
+        eventDate.setHours(23, 59, 0, 0);
+
+        let currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0);
+
+        return eventDate >= currentDate;
+    };
+
+    const dateRangeShowFilter = (show: Show) => {
+        let willShowEvent = false;
+
+        if (showPastEvents) {
+            willShowEvent = true;
+        } else {
+            willShowEvent = isFutureEvent(show);
+        }
+
+        return willShowEvent;
+    };
+
+    const addedDateRangeShowFilter = (show: Show) => {
+        let willShowEvent = false;
+
+        if (days === -1) {
+            willShowEvent = true;
+        } else {
+            willShowEvent = isRecentlyAdded(show, days);
+        }
+
+        return willShowEvent;
+    };
+
+    // const getInAddedDateRangeShows = (shows: Show[]): Show[] => {
+    //     if (!shows) {
+    //         return [];
+    //     }
+
+    //     // const { shows } = showsInfo;
+
+    //     if (days === -1) {
+    //         return shows;
+    //     }
+
+    //     const inEventDateRangeShows = shows.filter(dateRangeShowFilter);
+
+    //     const results = inEventDateRangeShows.filter(show => addedDateRangeShowFilter(show));
+
+    //     return results;
+    // }
+
+    const getRelevantShows = (): Show[] => {
+        // if (!shows) {
+        //     return [];
+        // }
+
+        const { shows } = showsInfo;
+
+        const inEventDateRangeShows = shows.filter(dateRangeShowFilter);
+
+        if (days === -1) {
+            return inEventDateRangeShows;
+        }
+
+        const results = inEventDateRangeShows.filter(addedDateRangeShowFilter);
+
+        return results;
+    }
+
     return (
         isLoading ? (<Backdrop open={true}>
             <CircularProgress color="inherit" />
@@ -97,7 +215,10 @@ export default function DenseTable() {
                     <Table className={classes.table} size="small" aria-label="a dense table">
                         <TableHead>
                             <TableRow>
-                                {/* <StyledTableCell>Day</StyledTableCell> */}
+                                <Hidden smDown>
+                                    <StyledTableCell>Day</StyledTableCell>
+
+                                </Hidden>
                                 <StyledTableCell>Date</StyledTableCell>
                                 <StyledTableCell>Artists</StyledTableCell>
                                 <StyledTableCell>Venue</StyledTableCell>
@@ -106,9 +227,12 @@ export default function DenseTable() {
                         </TableHead>
                         <TableBody>
                             {/* {showsInfo.shows.filter(show => new Date(show.date) >= new Date()).map((show) => ( */}
-                            {showsInfo.shows.filter(show => new Date(show.date) >= new Date()).map((show) => (
+                            {getRelevantShows().map((show) => (
                                 <StyledTableRow key={Math.random()}>
-                                    {/* <StyledTableCell >{getDayName(show.date)}</StyledTableCell> */}
+                                    <Hidden smDown>
+
+                                        <StyledTableCell >{getDayName(show.date)}</StyledTableCell>
+                                    </Hidden>
                                     <StyledTableCell>{getDateFormatted(show.date)}</StyledTableCell>
                                     <StyledTableCell>
                                         {/* <pre>
@@ -203,3 +327,5 @@ export default function DenseTable() {
             )
     );
 }
+
+export default DenseTable;
