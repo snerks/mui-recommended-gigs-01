@@ -57,8 +57,8 @@ const DenseTable: React.FC<Props> = (props) => {
     const theme = useTheme();
     const classes = useStyles();
     const [isLoading, setIsLoading] = useState(true);
-    const [showPastEvents, setShowPastEvents] = useState(props.showPastEvents);
-    const [days, setDays] = useState(props.days);
+    const [showPastEvents] = useState(props.showPastEvents);
+    const [days] = useState(props.days);
 
     const [showsInfo, setShowsInfo] = useState<ShowsInfo>({
         lastUpdated: new Date(),
@@ -81,7 +81,7 @@ const DenseTable: React.FC<Props> = (props) => {
 
     useEffect(() => {
         const fetchShowsInfo = async () => {
-            console.log("fetchShowsInfo");
+            // console.log("fetchShowsInfo");
 
             const url = `https://show01-cd72d.firebaseio.com/.json`;
 
@@ -89,7 +89,7 @@ const DenseTable: React.FC<Props> = (props) => {
 
             const response: ShowsInfo = await responseJson.json();
 
-            console.log("fetchShowsInfo", "response", response);
+            // console.log("fetchShowsInfo", "response", response);
 
             setShowsInfo(response);
             setIsLoading(false);
@@ -117,21 +117,21 @@ const DenseTable: React.FC<Props> = (props) => {
         return result;
     };
 
-    const getInDateRangeShows = (): Show[] => {
-        if (!showsInfo) {
-            return [];
-        }
+    // const getInDateRangeShows = (): Show[] => {
+    //     if (!showsInfo) {
+    //         return [];
+    //     }
 
-        const { shows } = showsInfo;
+    //     const { shows } = showsInfo;
 
-        if (showPastEvents) {
-            return shows;
-        }
+    //     if (showPastEvents) {
+    //         return shows;
+    //     }
 
-        const results = shows.filter(dateRangeShowFilter);
+    //     const results = shows.filter(dateRangeShowFilter);
 
-        return results;
-    }
+    //     return results;
+    // }
 
     const isFutureEvent = (show: Show) => {
         if (!show.date) {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Paper, Grid, createMuiTheme, ThemeProvider, useTheme } from "@material-ui/core";
+import { Paper, Grid, ThemeProvider, useTheme } from "@material-ui/core";
 import Header from "./Header";
 // import { blue } from "@material-ui/core/colors";
 import DenseTable from "./DenseTable";
@@ -12,11 +12,11 @@ interface Props {
     // match?: any;
 }
 
-interface RouterProps {
-    match: any;
-}
+// interface RouterProps {
+//     match: any;
+// }
 
-type PropsWithRouterParams = Props & RouterProps;
+// type PropsWithRouterParams = Props & RouterProps;
 
 const GigList: React.FC<Props> = ({ isDarkMode, setIsDarkMode }) => {
     // const [isDarkMode, setIsDarkMode] = useState(true);
@@ -38,7 +38,7 @@ const GigList: React.FC<Props> = ({ isDarkMode, setIsDarkMode }) => {
     const showPastEventsParam = showPastEvents === "true";
     const daysParam = days === undefined ? -1 : +days;
 
-    console.log(showPastEvents, showPastEventsParam);
+    // console.log(showPastEvents, showPastEventsParam);
     // const propsAsAny = props as any;
     // const { isDarkMode, setIsDarkMode } = propsAsAny;
     // const match = propsAsAny.match;

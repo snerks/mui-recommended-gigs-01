@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { blue, green, amber, blueGrey, red, cyan, indigo, lightBlue, grey, teal } from "@material-ui/core/colors";
+// import { blue, green, amber, blueGrey, red, cyan, indigo, lightBlue, grey, teal } from "@material-ui/core/colors";
 
 import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 import Home from "./components/Home";
