@@ -19,7 +19,7 @@ const App: React.FC = () => {
   });
   return (
     <ThemeProvider theme={theme}>
-      <BrowserRouter>
+      <BrowserRouter basename={process.env.PUBLIC_URL}>
         <Switch>
           <Route path="/" exact component={Home} />
           <Route path="/giglist" exact component={GigList} />
