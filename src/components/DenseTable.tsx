@@ -17,8 +17,17 @@ import {
   Hidden,
   Button,
   IconButton,
+  TextField,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
+import {
+  Formik,
+  Field,
+  Form,
+  useField,
+  FieldAttributes,
+  FieldArray,
+} from "formik";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -63,12 +72,31 @@ interface Props {
   days?: number;
 }
 
+const MyTextField: React.FC<FieldAttributes<{}>> = ({
+  placeholder,
+  ...props
+}) => {
+  const [field, meta] = useField<{}>(props);
+  const errorText = meta.error && meta.touched ? meta.error : "";
+  return (
+    <TextField
+      placeholder={placeholder}
+      {...field}
+      helperText={errorText}
+      autoComplete="off"
+      error={!!errorText}
+    />
+  );
+};
+
 const DenseTable: React.FC<Props> = (props) => {
   const theme = useTheme();
   const classes = useStyles();
   const [isLoading, setIsLoading] = useState(true);
   const [showPastEvents] = useState(props.showPastEvents);
   const [days] = useState(props.days);
+  const [artistFilter, setArtistFilter] = useState("");
+  const [relevantShows, setRelevantShows] = useState<Show[]>([]);
 
   const [showsInfo, setShowsInfo] = useState<ShowsInfo>({
     lastUpdated: new Date(),
@@ -101,11 +129,16 @@ const DenseTable: React.FC<Props> = (props) => {
       // console.log("fetchShowsInfo", "response", response);
 
       setShowsInfo(response);
+      setRelevantShows(getRelevantShows(response.shows));
       setIsLoading(false);
     };
 
     fetchShowsInfo();
   }, []);
+
+  useEffect(() => {
+    setRelevantShows(getRelevantShows(showsInfo.shows));
+  }, [artistFilter]);
 
   const isRecentlyAdded = (show: Show, thresholdInDays = 1) => {
     if (!show.addedDate) {
@@ -197,171 +230,253 @@ const DenseTable: React.FC<Props> = (props) => {
   //     return results;
   // }
 
-  const getRelevantShows = (): Show[] => {
+  const getArtistFilterShows = (shows: Show[]): Show[] => {
+    //     const results = this.inDateRangeShows.filter(show => {
+    const results = shows.filter((show) => {
+      if (!artistFilter) {
+        return true;
+      }
+
+      if (artistFilter.length < 2) {
+        return true;
+      }
+
+      const showArtistsText = show.artists.reduce(
+        (previousArtistsResult, currentArtist, currentArtistIndex) => {
+          const currentArtistText = currentArtist.name;
+
+          return currentArtistIndex === 0
+            ? currentArtistText
+            : previousArtistsResult + " " + currentArtistText;
+        },
+        ""
+      );
+
+      return (
+        showArtistsText.toLowerCase().indexOf(artistFilter.toLowerCase()) > -1
+      );
+    });
+
+    return results;
+  };
+
+  const getRelevantShows = (shows: Show[]): Show[] => {
     // if (!shows) {
     //     return [];
     // }
 
-    const { shows } = showsInfo;
+    // const { shows } = showsInfo;
 
-    const inEventDateRangeShows = shows.filter(dateRangeShowFilter);
+    let filteredShows = shows;
+
+    if (artistFilter) {
+      filteredShows = getArtistFilterShows(filteredShows);
+    }
+
+    const inEventDateRangeShows = filteredShows.filter(dateRangeShowFilter);
 
     if (days === -1) {
       return inEventDateRangeShows;
     }
 
-    const results = inEventDateRangeShows.filter(addedDateRangeShowFilter);
+    const addedDateRangeResults = inEventDateRangeShows.filter(
+      addedDateRangeShowFilter
+    );
 
-    return results;
+    return addedDateRangeResults;
   };
+
+  //   const handleArtistFilterChange = (e: React.ChangeEvent<any>): void => {
+  //     console.log(e.target.value);
+  //   };
 
   return isLoading ? (
     <Backdrop open={true}>
       <CircularProgress color="inherit" />
     </Backdrop>
   ) : (
-    <TableContainer component={Paper} square>
-      <Table className={classes.table} size="small" aria-label="a dense table">
-        <TableHead>
-          <TableRow>
-            <Hidden smDown>
-              <StyledTableCell>Day</StyledTableCell>
-            </Hidden>
-            <StyledTableCell>Date</StyledTableCell>
-            <StyledTableCell>Artists</StyledTableCell>
-            <StyledTableCell>Venue</StyledTableCell>
-            <StyledTableCell>Actions</StyledTableCell>
-            <StyledTableCell>&nbsp;</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {/* {showsInfo.shows.filter(show => new Date(show.date) >= new Date()).map((show) => ( */}
-          {getRelevantShows().map((show) => (
-            <StyledTableRow key={Math.random()}>
-              <Hidden smDown>
-                <StyledTableCell>{getDayName(show.date)}</StyledTableCell>
-              </Hidden>
-              <StyledTableCell>{getDateFormatted(show.date)}</StyledTableCell>
-              <StyledTableCell>
-                {/* <pre>
-                                    {JSON.stringify(show, null, 2)}
-                                </pre> */}
-                <Grid container>
-                  <Grid item xs={11}>
-                    {show.artists.map((artist) => {
-                      return (
-                        <p key={`${show.id}.${artist.name}`}>
-                          {artist.name}
+    <Grid container direction="column">
+      <Grid item>
+        <Formik initialValues={{ artistFilter: "" }} onSubmit={() => {}}>
+          {({ values, errors, isSubmitting, handleChange }) => {
+            // console.table(values);
 
-                          {/* <span *ngIf="artist.stageTime"
-                                          class="badge badge-pill badge-primary"
-                                          style="margin-right: 10px;"
-                                          title="Stage Time">
-                                          {{artist.stageTime}}
-                                        </span>
-                          
-                                        <a *ngIf="artist.videoUrl" [attr.href]="artist.videoUrl">
-                                          <span
-                                            class="badge badge-danger"
-                                            style="margin-right: 10px;">
-                                            Video
-                                          </span>
-                                        </a> */}
-                        </p>
-                      );
-                    })}
-                  </Grid>
-                  <Grid item xs={1}>
-                    <IconButton
-                      aria-label="details"
+            setTimeout(function () {
+              setArtistFilter(values.artistFilter);
+            }, 30);
+
+            return (
+              <Grid container>
+                <Grid item>
+                  <Form style={{ padding: "0 30px 15px 15px" }}>
+                    <MyTextField
+                      placeholder="artist filter"
+                      name="artistFilter"
+                      type="input"
+                    />
+                  </Form>
+                </Grid>
+                <Grid item>
+                  {relevantShows.length} item
+                  {relevantShows.length === 1 ? "" : "s"} found
+                </Grid>
+              </Grid>
+            );
+          }}
+        </Formik>
+      </Grid>
+
+      <Grid item>
+        <TableContainer component={Paper} square>
+          <Table
+            className={classes.table}
+            size="small"
+            aria-label="a dense table"
+          >
+            <TableHead>
+              <TableRow>
+                <Hidden smDown>
+                  <StyledTableCell>Day</StyledTableCell>
+                </Hidden>
+                <StyledTableCell>Date</StyledTableCell>
+                <StyledTableCell>Artists</StyledTableCell>
+                <StyledTableCell>Venue</StyledTableCell>
+                <StyledTableCell>Actions</StyledTableCell>
+                <StyledTableCell>&nbsp;</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {/* {showsInfo.shows.filter(show => new Date(show.date) >= new Date()).map((show) => ( */}
+              {relevantShows.map((show) => (
+                <StyledTableRow key={Math.random()}>
+                  <Hidden smDown>
+                    <StyledTableCell>{getDayName(show.date)}</StyledTableCell>
+                  </Hidden>
+                  <StyledTableCell>
+                    {getDateFormatted(show.date)}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    {/* <pre>
+                                          {JSON.stringify(show, null, 2)}
+                                      </pre> */}
+                    <Grid container>
+                      <Grid item xs={11}>
+                        {show.artists.map((artist) => {
+                          return (
+                            <p key={`${show.id}.${artist.name}`}>
+                              {artist.name}
+
+                              {/* <span *ngIf="artist.stageTime"
+                                                class="badge badge-pill badge-primary"
+                                                style="margin-right: 10px;"
+                                                title="Stage Time">
+                                                {{artist.stageTime}}
+                                              </span>
+                                
+                                              <a *ngIf="artist.videoUrl" [attr.href]="artist.videoUrl">
+                                                <span
+                                                  class="badge badge-danger"
+                                                  style="margin-right: 10px;">
+                                                  Video
+                                                </span>
+                                              </a> */}
+                            </p>
+                          );
+                        })}
+                      </Grid>
+                      <Grid item xs={1}>
+                        <IconButton
+                          aria-label="details"
+                          component={Link}
+                          to={`/gigdetails/${show.id}`}
+                        >
+                          <DetailsIcon />
+                        </IconButton>
+                      </Grid>
+                    </Grid>
+                  </StyledTableCell>
+                  <StyledTableCell>{show.venue}</StyledTableCell>
+                  <StyledTableCell>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="small"
                       component={Link}
                       to={`/gigdetails/${show.id}`}
                     >
-                      <DetailsIcon />
-                    </IconButton>
-                  </Grid>
-                </Grid>
-              </StyledTableCell>
-              <StyledTableCell>{show.venue}</StyledTableCell>
-              <StyledTableCell>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="small"
-                  component={Link}
-                  to={`/gigdetails/${show.id}`}
-                >
-                  <span>View</span>
-                </Button>
-              </StyledTableCell>
-              <StyledTableCell>
-                <Grid container direction="column" spacing={1}>
-                  {show.isSoldOut && (
-                    <Grid item>
-                      <Chip
-                        style={{
-                          backgroundColor: theme.palette.warning.main,
-                          color: theme.palette.warning.contrastText,
-                        }}
-                        size="small"
-                        label="Sold Out"
-                      />
+                      <span>View</span>
+                    </Button>
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    <Grid container direction="column" spacing={1}>
+                      {show.isSoldOut && (
+                        <Grid item>
+                          <Chip
+                            style={{
+                              backgroundColor: theme.palette.warning.main,
+                              color: theme.palette.warning.contrastText,
+                            }}
+                            size="small"
+                            label="Sold Out"
+                          />
+                        </Grid>
+                      )}
+                      {show.isCancelled && (
+                        <Grid item>
+                          <Chip
+                            style={{
+                              backgroundColor: theme.palette.error.main,
+                              color: theme.palette.error.contrastText,
+                            }}
+                            size="small"
+                            label="Cancelled"
+                          />
+                        </Grid>
+                      )}
+                      {show.priceText && show.priceText.indexOf("£") === 0 && (
+                        <Grid item>
+                          <Chip
+                            style={{
+                              backgroundColor: theme.palette.info.main,
+                              color: theme.palette.info.contrastText,
+                            }}
+                            size="small"
+                            label={show.priceText}
+                          />
+                        </Grid>
+                      )}
+                      {show.notes && (
+                        <Grid item>
+                          <span
+                            style={
+                              {
+                                // backgroundColor: theme.palette.info.main,
+                                // color: theme.palette.info.contrastText
+                              }
+                            }
+                          >
+                            {show.notes}
+                          </span>
+                        </Grid>
+                      )}
                     </Grid>
-                  )}
-                  {show.isCancelled && (
-                    <Grid item>
-                      <Chip
-                        style={{
-                          backgroundColor: theme.palette.error.main,
-                          color: theme.palette.error.contrastText,
-                        }}
-                        size="small"
-                        label="Cancelled"
-                      />
-                    </Grid>
-                  )}
-                  {show.priceText && show.priceText.indexOf("£") === 0 && (
-                    <Grid item>
-                      <Chip
-                        style={{
-                          backgroundColor: theme.palette.info.main,
-                          color: theme.palette.info.contrastText,
-                        }}
-                        size="small"
-                        label={show.priceText}
-                      />
-                    </Grid>
-                  )}
-                  {show.notes && (
-                    <Grid item>
-                      <span
-                        style={
-                          {
-                            // backgroundColor: theme.palette.info.main,
-                            // color: theme.palette.info.contrastText
-                          }
-                        }
-                      >
-                        {show.notes}
-                      </span>
-                    </Grid>
-                  )}
-                </Grid>
 
-                {/* 
-
-            <span *ngIf="show.priceText && show.priceText.indexOf('£') === 0"
-              class="badge badge-info" style="margin-right: 10px;">
-              {{show.priceText}}
-            </span>
-
-            <span *ngIf="show.notes" style="margin-right: 10px;">{{show.notes}}</span> */}
-              </StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+                    {/* 
+      
+                  <span *ngIf="show.priceText && show.priceText.indexOf('£') === 0"
+                    class="badge badge-info" style="margin-right: 10px;">
+                    {{show.priceText}}
+                  </span>
+      
+                  <span *ngIf="show.notes" style="margin-right: 10px;">{{show.notes}}</span> */}
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Grid>
+    </Grid>
   );
 };
 

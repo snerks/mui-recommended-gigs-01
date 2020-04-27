@@ -49,7 +49,7 @@ const GigList: React.FC<Props> = ({ isDarkMode, setIsDarkMode }) => {
   return (
     <ThemeProvider theme={theme}>
       <Paper elevation={0} square style={{ height: "100%" }}>
-        <Grid container direction="column" spacing={2}>
+        <Grid container direction="column" spacing={1}>
           <Grid item>
             <Header isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
           </Grid>

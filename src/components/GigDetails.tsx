@@ -19,6 +19,7 @@ import { ShowsInfo } from "../models/models";
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
+    height: "100%",
   },
   bullet: {
     display: "inline-block",
@@ -132,38 +133,51 @@ const GigDetails: React.FC = () => {
                 <Typography className={classes.pos} color="textSecondary">
                   Artists
                 </Typography>
-                {show.artists.map((artist) => {
-                  return (
-                    <div key={`${show.id}.${artist.name}`}>
-                      {artist.name}&nbsp;
-                      {artist.stageTime && (
-                        <Chip
-                          style={{
-                            backgroundColor: theme.palette.info.main,
-                            color: theme.palette.info.contrastText,
-                          }}
-                          size="small"
-                          label={artist.stageTime}
-                        />
-                      )}
-                      &nbsp;
-                      {artist.videoUrl && (
-                        <a href={artist.videoUrl}>
-                          <Chip
-                            style={{
-                              backgroundColor: theme.palette.info.main,
-                              color: theme.palette.info.contrastText,
-                            }}
-                            size="small"
-                            label="Video"
-                          />
-                        </a>
-                      )}
-                      &nbsp;
-                    </div>
-                  );
-                })}
                 <Grid container direction="column" spacing={1}>
+                  {show.artists.map((artist) => {
+                    return (
+                      <Grid item container key={`${show.id}.${artist.name}`}>
+                        <Grid item xs={4}>
+                          {artist.name}
+                        </Grid>
+
+                        <Grid item xs={4}>
+                          {artist.stageTime && (
+                            <Chip
+                              style={{
+                                backgroundColor: theme.palette.info.main,
+                                color: theme.palette.info.contrastText,
+                              }}
+                              size="small"
+                              label={artist.stageTime}
+                            />
+                          )}
+                        </Grid>
+
+                        <Grid item xs={4}>
+                          {artist.videoUrl && (
+                            <a href={artist.videoUrl}>
+                              <Chip
+                                style={{
+                                  backgroundColor: theme.palette.info.main,
+                                  color: theme.palette.info.contrastText,
+                                }}
+                                size="small"
+                                label="Video"
+                              />
+                            </a>
+                          )}
+                        </Grid>
+                      </Grid>
+                    );
+                  })}
+                </Grid>
+                <Grid
+                  container
+                  direction="column"
+                  spacing={1}
+                  style={{ marginTop: 10 }}
+                >
                   {show.isSoldOut && (
                     <Grid item>
                       <Chip
@@ -220,7 +234,11 @@ const GigDetails: React.FC = () => {
             <CardActions>
               {/* <Button size="small">Learn More</Button> */}
               <Typography variant="body2" component="div">
-                <Grid container direction="column">
+                <Grid
+                  container
+                  direction="column"
+                  style={{ marginLeft: 10, marginRight: 10 }}
+                >
                   {show.addedDate && (
                     <Grid item>
                       <Typography
