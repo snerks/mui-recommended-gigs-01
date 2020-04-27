@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
+import DetailsIcon from "@material-ui/icons/Details";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -15,6 +16,7 @@ import {
   Grid,
   Hidden,
   Button,
+  IconButton,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
@@ -244,12 +246,14 @@ const DenseTable: React.FC<Props> = (props) => {
                 {/* <pre>
                                     {JSON.stringify(show, null, 2)}
                                 </pre> */}
-                {show.artists.map((artist) => {
-                  return (
-                    <p key={`${show.id}.${artist.name}`}>
-                      {artist.name}
+                <Grid container>
+                  <Grid item xs={11}>
+                    {show.artists.map((artist) => {
+                      return (
+                        <p key={`${show.id}.${artist.name}`}>
+                          {artist.name}
 
-                      {/* <span *ngIf="artist.stageTime"
+                          {/* <span *ngIf="artist.stageTime"
                                           class="badge badge-pill badge-primary"
                                           style="margin-right: 10px;"
                                           title="Stage Time">
@@ -263,9 +267,20 @@ const DenseTable: React.FC<Props> = (props) => {
                                             Video
                                           </span>
                                         </a> */}
-                    </p>
-                  );
-                })}
+                        </p>
+                      );
+                    })}
+                  </Grid>
+                  <Grid item xs={1}>
+                    <IconButton
+                      aria-label="details"
+                      component={Link}
+                      to={`/gigdetails/${show.id}`}
+                    >
+                      <DetailsIcon />
+                    </IconButton>
+                  </Grid>
+                </Grid>
               </StyledTableCell>
               <StyledTableCell>{show.venue}</StyledTableCell>
               <StyledTableCell>

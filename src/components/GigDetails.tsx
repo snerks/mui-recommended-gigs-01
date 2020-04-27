@@ -113,7 +113,7 @@ const GigDetails: React.FC = () => {
         {!show && <h1>Event not found</h1>}
 
         {show && (
-          <Card className={classes.root} variant="outlined">
+          <Card className={classes.root} variant="outlined" square>
             <CardContent>
               <Typography
                 className={classes.title}
@@ -219,24 +219,33 @@ const GigDetails: React.FC = () => {
             </CardContent>
             <CardActions>
               {/* <Button size="small">Learn More</Button> */}
-              {show.addedDate && (
-                <>
-                  <div>
-                    <Typography variant="caption" display="block" gutterBottom>
-                      Added: {getDayName(show.addedDate)},{" "}
-                      {getDateFormatted(show.addedDate)}
-                    </Typography>
-                  </div>
-                  <br />
-                </>
-              )}
-              {show.id && (
-                <div>
-                  <Typography variant="caption" display="block" gutterBottom>
-                    Id: {show.id}
-                  </Typography>
-                </div>
-              )}
+              <Typography variant="body2" component="div">
+                <Grid container direction="column">
+                  {show.addedDate && (
+                    <Grid item>
+                      <Typography
+                        variant="caption"
+                        display="block"
+                        gutterBottom
+                      >
+                        Added: {getDayName(show.addedDate)},{" "}
+                        {getDateFormatted(show.addedDate)}
+                      </Typography>
+                    </Grid>
+                  )}
+                  {show.id && (
+                    <Grid item>
+                      <Typography
+                        variant="caption"
+                        display="block"
+                        gutterBottom
+                      >
+                        Id: {show.id}
+                      </Typography>
+                    </Grid>
+                  )}
+                </Grid>
+              </Typography>
             </CardActions>
           </Card>
         )}
