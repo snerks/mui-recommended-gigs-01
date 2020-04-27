@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core";
 import Home from "./components/Home";
 import GigList from "./components/GigList";
+import GigDetails from "./components/GigDetails";
 
 const App: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState(true);
@@ -49,6 +50,9 @@ const App: React.FC = () => {
               <GigList isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
             )}
           />
+
+          <Route path="/gigdetails/:id" exact render={() => <GigDetails />} />
+
           {/* <Route path="/" render={() => <div>404</div>} /> */}
           <Route
             path="*"
