@@ -269,21 +269,16 @@ const DenseTable: React.FC<Props> = (props) => {
 
     let filteredShows = shows;
 
+    filteredShows = filteredShows.filter(dateRangeShowFilter);
+
+    if (days !== -1) {
+      filteredShows = filteredShows.filter(addedDateRangeShowFilter);
+    }
+
     if (artistFilter) {
       filteredShows = getArtistFilterShows(filteredShows);
     }
-
-    const inEventDateRangeShows = filteredShows.filter(dateRangeShowFilter);
-
-    if (days === -1) {
-      return inEventDateRangeShows;
-    }
-
-    const addedDateRangeResults = inEventDateRangeShows.filter(
-      addedDateRangeShowFilter
-    );
-
-    return addedDateRangeResults;
+    return filteredShows;
   };
 
   //   const handleArtistFilterChange = (e: React.ChangeEvent<any>): void => {
@@ -301,9 +296,11 @@ const DenseTable: React.FC<Props> = (props) => {
           {({ values, errors, isSubmitting, handleChange }) => {
             // console.table(values);
 
-            setTimeout(function () {
-              setArtistFilter(values.artistFilter);
-            }, 30);
+            if (values.artistFilter && values.artistFilter.length > 1) {
+              setTimeout(function () {
+                setArtistFilter(values.artistFilter);
+              }, 30);
+            }
 
             return (
               <Grid container>
@@ -317,8 +314,12 @@ const DenseTable: React.FC<Props> = (props) => {
                   </Form>
                 </Grid>
                 <Grid item>
-                  {relevantShows.length} item
-                  {relevantShows.length === 1 ? "" : "s"} found
+                  <Chip
+                    variant="default"
+                    color="secondary"
+                    size="small"
+                    label={relevantShows.length}
+                  />
                 </Grid>
               </Grid>
             );
