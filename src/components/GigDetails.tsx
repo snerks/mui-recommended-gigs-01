@@ -19,7 +19,7 @@ import { ShowsInfo } from "../models/models";
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
-    height: "100%",
+    // height: "100%",
   },
   bullet: {
     display: "inline-block",
@@ -105,11 +105,6 @@ const GigDetails: React.FC = () => {
       alignContent="stretch"
       style={{ height: "100%" }}
     >
-      {/* <h1>Gig Details</h1>
-      <h2>id = [{id}]</h2>
-
-      <h3>Details</h3> */}
-
       <Grid item xs={12}>
         {!show && <h1>Event not found</h1>}
 
