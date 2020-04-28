@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "15df68860e068d915abde8b4ad2872fd",
+    "revision": "917a3fb8fb3bfb6b07712f83cfa24a91",
     "url": "/mui-recommended-gigs-01/index.html"
   },
   {
