@@ -5,8 +5,9 @@ import {
   Chip,
   Backdrop,
   CircularProgress,
+  Container,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, createStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
@@ -16,21 +17,16 @@ import Typography from "@material-ui/core/Typography";
 import { useParams } from "react-router-dom";
 import { ShowsInfo } from "../models/models";
 
-const useStyles = makeStyles({
-  root: {
-    // minWidth: 275,
-  },
-  // bullet: {
-  //   display: "inline-block",
-  //   margin: "0 2px",
-  //   transform: "scale(0.8)",
-  // },
-  title: {
-    fontSize: 14,
-  },
-  pos: {
-    // marginBottom: 12,
-  },
+const useStyles = makeStyles((theme) => {
+
+  return createStyles({
+    root: {
+      backgroundColor: theme.palette.background.default
+    },
+    title: {
+      fontSize: 14,
+    },
+  });
 });
 
 interface RouteParams {
@@ -97,174 +93,178 @@ const GigDetails: React.FC = () => {
       <CircularProgress color="inherit" />
     </Backdrop>
   ) : (
-      <Grid
-        container
-        direction="column"
-        alignItems="stretch"
-        alignContent="stretch"
-        style={{ height: "100%" }}
-      >
-        <Grid item xs={12}>
-          {!show && <h1>Event not found</h1>}
+      <Container maxWidth="lg">
+        <Typography component="div" className={classes.root} style={{ height: '100vh' }}>
+          <Grid
+            container
+            direction="column"
+            alignItems="stretch"
+            alignContent="stretch"
+            style={{ height: "100%" }}
+          >
+            <Grid item xs={12}>
+              {!show && <h1>Event not found</h1>}
 
-          {show && (
-            <Card className={classes.root} variant="outlined" square>
-              <CardContent>
-                <Typography
-                  className={classes.title}
-                  color="textSecondary"
-                  gutterBottom
-                >
-                  {getDayName(show.date)}, {getDateFormatted(show.date)}
-                </Typography>
-                <Typography variant="h5" component="h2">
-                  {show.artists[0].name}
-                </Typography>
-                <Typography className={classes.pos} color="textSecondary">
-                  {show.venue}
-                </Typography>
-                <Typography variant="body2" component="div">
-                  <Typography className={classes.pos} color="textSecondary">
-                    Artists
-                </Typography>
-                  <Grid container direction="column" spacing={1}>
-                    {show.artists.map((artist) => {
-                      return (
-                        <Grid item container key={`${show.id}.${artist.name}`}>
-                          <Grid item xs={4}>
-                            {artist.name}
+              {show && (
+                <Card className={classes.root} variant="outlined" square>
+                  <CardContent>
+                    <Typography
+                      className={classes.title}
+                      color="textSecondary"
+                      gutterBottom
+                    >
+                      {getDayName(show.date)}, {getDateFormatted(show.date)}
+                    </Typography>
+                    <Typography variant="h5" component="h2">
+                      {show.artists[0].name}
+                    </Typography>
+                    <Typography color="textSecondary">
+                      {show.venue}
+                    </Typography>
+                    <Typography variant="body2" component="div">
+                      <Typography color="textSecondary">
+                        Artists
+                  </Typography>
+                      <Grid container direction="column" spacing={1}>
+                        {show.artists.map((artist) => {
+                          return (
+                            <Grid item container key={`${show.id}.${artist.name}`}>
+                              <Grid item xs={4}>
+                                {artist.name}
+                              </Grid>
+
+                              <Grid item xs={4}>
+                                {artist.stageTime && (
+                                  <Chip
+                                    style={{
+                                      backgroundColor: theme.palette.info.main,
+                                      color: theme.palette.info.contrastText,
+                                    }}
+                                    size="small"
+                                    label={artist.stageTime}
+                                  />
+                                )}
+                              </Grid>
+
+                              <Grid item xs={4}>
+                                {artist.videoUrl && (
+                                  <a href={artist.videoUrl}>
+                                    <Chip
+                                      style={{
+                                        backgroundColor: theme.palette.info.main,
+                                        color: theme.palette.info.contrastText,
+                                      }}
+                                      size="small"
+                                      label="Video"
+                                    />
+                                  </a>
+                                )}
+                              </Grid>
+                            </Grid>
+                          );
+                        })}
+                      </Grid>
+                      <Grid
+                        container
+                        direction="column"
+                        spacing={1}
+                        style={{ marginTop: 10 }}
+                      >
+                        {show.isSoldOut && (
+                          <Grid item>
+                            <Chip
+                              style={{
+                                backgroundColor: theme.palette.warning.main,
+                                color: theme.palette.warning.contrastText,
+                              }}
+                              size="small"
+                              label="Sold Out"
+                            />
                           </Grid>
-
-                          <Grid item xs={4}>
-                            {artist.stageTime && (
-                              <Chip
-                                style={{
-                                  backgroundColor: theme.palette.info.main,
-                                  color: theme.palette.info.contrastText,
-                                }}
-                                size="small"
-                                label={artist.stageTime}
-                              />
-                            )}
+                        )}
+                        {show.isCancelled && (
+                          <Grid item>
+                            <Chip
+                              style={{
+                                backgroundColor: theme.palette.error.main,
+                                color: theme.palette.error.contrastText,
+                              }}
+                              size="small"
+                              label="Cancelled"
+                            />
                           </Grid>
-
-                          <Grid item xs={4}>
-                            {artist.videoUrl && (
-                              <a href={artist.videoUrl}>
-                                <Chip
-                                  style={{
-                                    backgroundColor: theme.palette.info.main,
-                                    color: theme.palette.info.contrastText,
-                                  }}
-                                  size="small"
-                                  label="Video"
-                                />
-                              </a>
-                            )}
+                        )}
+                        {show.priceText && show.priceText.indexOf("£") === 0 && (
+                          <Grid item>
+                            <Chip
+                              style={{
+                                backgroundColor: theme.palette.info.main,
+                                color: theme.palette.info.contrastText,
+                              }}
+                              size="small"
+                              label={show.priceText}
+                            />
                           </Grid>
-                        </Grid>
-                      );
-                    })}
-                  </Grid>
-                  <Grid
-                    container
-                    direction="column"
-                    spacing={1}
-                    style={{ marginTop: 10 }}
-                  >
-                    {show.isSoldOut && (
-                      <Grid item>
-                        <Chip
-                          style={{
-                            backgroundColor: theme.palette.warning.main,
-                            color: theme.palette.warning.contrastText,
-                          }}
-                          size="small"
-                          label="Sold Out"
-                        />
+                        )}
+                        {show.notes && (
+                          <Grid item>
+                            <span
+                              style={
+                                {
+                                  // backgroundColor: theme.palette.info.main,
+                                  // color: theme.palette.info.contrastText
+                                }
+                              }
+                            >
+                              {show.notes}
+                            </span>
+                          </Grid>
+                        )}
                       </Grid>
-                    )}
-                    {show.isCancelled && (
-                      <Grid item>
-                        <Chip
-                          style={{
-                            backgroundColor: theme.palette.error.main,
-                            color: theme.palette.error.contrastText,
-                          }}
-                          size="small"
-                          label="Cancelled"
-                        />
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    {/* <Button size="small">Learn More</Button> */}
+                    <Typography variant="body2" component="div">
+                      <Grid
+                        container
+                        direction="column"
+                        style={{ marginLeft: 10, marginRight: 10 }}
+                      >
+                        {show.addedDate && (
+                          <Grid item>
+                            <Typography
+                              variant="caption"
+                              display="block"
+                              gutterBottom
+                            >
+                              Added: {getDayName(show.addedDate)},{" "}
+                              {getDateFormatted(show.addedDate)}
+                            </Typography>
+                          </Grid>
+                        )}
+                        {show.id && (
+                          <Grid item>
+                            <Typography
+                              variant="caption"
+                              display="block"
+                              gutterBottom
+                            >
+                              Id: {show.id}
+                            </Typography>
+                          </Grid>
+                        )}
                       </Grid>
-                    )}
-                    {show.priceText && show.priceText.indexOf("£") === 0 && (
-                      <Grid item>
-                        <Chip
-                          style={{
-                            backgroundColor: theme.palette.info.main,
-                            color: theme.palette.info.contrastText,
-                          }}
-                          size="small"
-                          label={show.priceText}
-                        />
-                      </Grid>
-                    )}
-                    {show.notes && (
-                      <Grid item>
-                        <span
-                          style={
-                            {
-                              // backgroundColor: theme.palette.info.main,
-                              // color: theme.palette.info.contrastText
-                            }
-                          }
-                        >
-                          {show.notes}
-                        </span>
-                      </Grid>
-                    )}
-                  </Grid>
-                </Typography>
-              </CardContent>
-              <CardActions>
-                {/* <Button size="small">Learn More</Button> */}
-                <Typography variant="body2" component="div">
-                  <Grid
-                    container
-                    direction="column"
-                    style={{ marginLeft: 10, marginRight: 10 }}
-                  >
-                    {show.addedDate && (
-                      <Grid item>
-                        <Typography
-                          variant="caption"
-                          display="block"
-                          gutterBottom
-                        >
-                          Added: {getDayName(show.addedDate)},{" "}
-                          {getDateFormatted(show.addedDate)}
-                        </Typography>
-                      </Grid>
-                    )}
-                    {show.id && (
-                      <Grid item>
-                        <Typography
-                          variant="caption"
-                          display="block"
-                          gutterBottom
-                        >
-                          Id: {show.id}
-                        </Typography>
-                      </Grid>
-                    )}
-                  </Grid>
-                </Typography>
-              </CardActions>
-            </Card>
-          )}
+                    </Typography>
+                  </CardActions>
+                </Card>
+              )}
 
-          {/* <pre>{JSON.stringify(getShowById(id), null, 2)}</pre> */}
-        </Grid>
-      </Grid>
+              {/* <pre>{JSON.stringify(getShowById(id), null, 2)}</pre> */}
+            </Grid>
+          </Grid>
+        </Typography>
+      </Container>
     );
 };
 
