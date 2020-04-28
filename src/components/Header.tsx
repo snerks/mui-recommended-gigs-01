@@ -2,6 +2,7 @@ import React from "react";
 import { AppBar, Toolbar, Typography, Switch, Paper } from "@material-ui/core";
 import HighlightIcon from "@material-ui/icons/HighlightOutlined";
 import { makeStyles } from "@material-ui/styles";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(() => ({
   typographyStyles: {

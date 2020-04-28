@@ -22,6 +22,8 @@ export interface Show {
   notes?: string;
 
   detailsUri?: string;
+
+  artistsText: string;
 }
 
 export interface Artist {
