@@ -92,7 +92,7 @@ const MyTextField: React.FC<FieldAttributes<{}>> = ({
 };
 
 const DenseTable: React.FC<Props> = (props) => {
-    console.log("DenseTable : Start Render");
+    // console.log("DenseTable : Start Render");
 
     const theme = useTheme();
     const classes = useStyles();

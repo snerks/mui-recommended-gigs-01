@@ -93,7 +93,7 @@ const GigDetails: React.FC = () => {
       <CircularProgress color="inherit" />
     </Backdrop>
   ) : (
-      <Container maxWidth="lg">
+      <Container maxWidth={false}>
         <Typography component="div" className={classes.root} style={{ height: '100vh' }}>
           <Grid
             container
