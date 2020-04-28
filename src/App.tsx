@@ -45,13 +45,12 @@ const App: React.FC = () => {
 
           <Route
             path="/giglist/:showPastEvents/:days?"
-            exact
             render={() => (
               <GigList isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
             )}
           />
 
-          <Route path="/gigdetails/:id" exact render={() => <GigDetails />} />
+          <Route path="/gigdetails/:id" render={() => <GigDetails />} />
 
           {/* <Route path="/" render={() => <div>404</div>} /> */}
           <Route
