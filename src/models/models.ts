@@ -23,7 +23,7 @@ export interface Show {
 
   detailsUri?: string;
 
-  artistsText: string;
+  artistsText?: string;
 }
 
 export interface Artist {
@@ -31,6 +31,8 @@ export interface Artist {
   stageTime?: string;
 
   videoUrl?: string;
+
+  id: string;
 }
 
 export interface VenueBts {

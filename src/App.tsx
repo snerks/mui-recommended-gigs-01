@@ -6,6 +6,7 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core";
 import Home from "./components/Home";
 import GigList from "./components/GigList";
 import GigDetails from "./components/GigDetails";
+import EditGigDetails from "./components/EditGigDetails";
 
 const App: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState(true);
@@ -51,6 +52,10 @@ const App: React.FC = () => {
           />
 
           <Route path="/gigdetails/:id" render={() => <GigDetails />} />
+          <Route
+            path="/editgigdetails/:id?"
+            render={() => <EditGigDetails />}
+          />
 
           {/* <Route path="/" render={() => <div>404</div>} /> */}
           <Route
