@@ -171,245 +171,246 @@ const EditGigDetails: React.FC = () => {
   const initialValues: Show = show
     ? show
     : {
-        addedDate: new Date(),
-        venue: "",
-        date: new Date(),
-        notes: "",
-        priceText: "",
-        isSoldOut: false,
-        isCancelled: false,
-        artists: [
-          { name: "", stageTime: "", videoUrl: "", id: "" + Math.random() },
-        ],
-      };
+      addedDate: new Date(),
+      venue: "",
+      date: new Date(),
+      notes: "",
+      priceText: "",
+      isSoldOut: false,
+      isCancelled: false,
+      artists: [
+        { name: "", stageTime: "", videoUrl: "", id: "" + Math.random() },
+      ],
+    };
 
   return isLoading ? (
     <Backdrop open={true}>
       <CircularProgress color="inherit" />
     </Backdrop>
   ) : (
-    // <Container maxWidth={false}>
-    <Paper elevation={0} square style={{ height: "100%" }}>
-      <Grid container direction="column">
-        <Grid item>
-          <Header isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
-        </Grid>
-        <Grid item container alignContent="stretch">
-          <Grid item xs={12}>
-            <div style={{ margin: 15 }}>
-              <Formik
-                initialValues={initialValues}
-                validationSchema={validationSchema}
-                onSubmit={(data, { setSubmitting, resetForm }) => {
-                  setSubmitting(true);
+      // <Container maxWidth={false}>
+      <ThemeProvider theme={theme}>
+        <Paper elevation={0} square style={{ height: "100%" }}>
+          <Grid container direction="column">
+            <Grid item>
+              <Header isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+            </Grid>
+            <Grid item container alignContent="stretch">
+              <Grid item xs={12}>
+                <div style={{ margin: 15 }}>
+                  <Formik
+                    initialValues={initialValues}
+                    validationSchema={validationSchema}
+                    onSubmit={(data, { setSubmitting, resetForm }) => {
+                      setSubmitting(true);
 
-                  // Make async call
-                  console.log("submit", data);
+                      // Make async call
+                      console.log("submit", data);
 
-                  setSubmitting(false);
-                }}
-              >
-                {({
-                  values,
-                  errors,
-                  isSubmitting,
-                  handleChange,
-                  handleBlur,
-                  handleSubmit,
-                }) => (
-                  <Grid container>
-                    <Grid item xs={12}>
-                      <Form>
-                        <Grid container spacing={2} direction="column">
-                          <Grid item>
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                              <Field
-                                component={KeyboardDatePicker}
-                                autoOk
-                                name="date"
-                                label="Event Date"
-                                disableToolbar
-                                variant="inline"
-                                format="dd MMMM yyyy"
-                                fullWidth
-                              />
-                            </MuiPickersUtilsProvider>
-                          </Grid>
-                          <Grid item>
-                            <MyTextField
-                              placeholder="venue"
-                              name="venue"
-                              type="input"
-                              label="Venue"
-                            />
-                          </Grid>
-                        </Grid>
+                      setSubmitting(false);
+                    }}
+                  >
+                    {({
+                      values,
+                      errors,
+                      isSubmitting,
+                      handleChange,
+                      handleBlur,
+                      handleSubmit,
+                    }) => (
+                        <Grid container>
+                          <Grid item xs={12}>
+                            <Form>
+                              <Grid container spacing={2} direction="column">
+                                <Grid item>
+                                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                    <Field
+                                      component={KeyboardDatePicker}
+                                      autoOk
+                                      name="date"
+                                      label="Event Date"
+                                      disableToolbar
+                                      variant="inline"
+                                      format="dd MMMM yyyy"
+                                      fullWidth
+                                    />
+                                  </MuiPickersUtilsProvider>
+                                </Grid>
+                                <Grid item>
+                                  <MyTextField
+                                    placeholder="venue"
+                                    name="venue"
+                                    type="input"
+                                    label="Venue"
+                                  />
+                                </Grid>
+                              </Grid>
 
-                        <Grid
-                          container
-                          direction="column"
-                          style={{ marginTop: 10 }}
-                        >
-                          <Grid item container>
-                            <Grid item xs={12}>
-                              <FieldArray name="artists">
-                                {(arrayHelpers) => (
-                                  <div>
-                                    <Grid container direction="column">
-                                      <Grid
-                                        item
-                                        container
-                                        justify="flex-start"
-                                        alignItems="center"
-                                        spacing={2}
-                                      >
-                                        <Grid item>
-                                          <Badge
-                                            badgeContent={values.artists.length}
-                                            color="primary"
-                                          >
-                                            <Typography>Artists</Typography>
-                                          </Badge>
-                                        </Grid>
-                                        <Grid item>
-                                          <IconButton
-                                            aria-label="add"
-                                            onClick={() =>
-                                              arrayHelpers.push({
-                                                name: "",
-                                                stageTime: "",
-                                                videoUrl: "",
-                                                id: "" + Math.random(),
-                                              })
-                                            }
-                                          >
-                                            <PersonAddIcon />
-                                          </IconButton>
-                                        </Grid>
-                                      </Grid>
-                                      <div
-                                      // item
-                                      // container
-                                      // xs={12}
-                                      // style={{
-                                      //   border: "5px solid black",
-                                      //   padding: 30,
-                                      // }}
-                                      >
-                                        {values.artists.map((artist, index) => {
-                                          const nameName = `artists.${index}.name`;
-                                          const stageTimeName = `artists.${index}.stageTime`;
-                                          const videoUrlName = `artists.${index}.videoUrl`;
-
-                                          return (
+                              <Grid
+                                container
+                                direction="column"
+                                style={{ marginTop: 10 }}
+                              >
+                                <Grid item container>
+                                  <Grid item xs={12}>
+                                    <FieldArray name="artists">
+                                      {(arrayHelpers) => (
+                                        <div>
+                                          <Grid container direction="column">
                                             <Grid
                                               item
                                               container
-                                              xs={12}
-                                              key={artist.id || Math.random()}
+                                              justify="flex-start"
+                                              alignItems="center"
+                                              spacing={2}
                                             >
-                                              <Grid item xs={9} sm={3}>
-                                                <MyTextField
-                                                  placeholder="artist name"
-                                                  name={nameName}
-                                                />
+                                              <Grid item>
+                                                <Badge
+                                                  badgeContent={values.artists.length}
+                                                  color="primary"
+                                                >
+                                                  <Typography>Artists</Typography>
+                                                </Badge>
                                               </Grid>
-
-                                              <Hidden smDown>
-                                                <Grid item xs={3}>
-                                                  <MyTextField
-                                                    placeholder="stage time"
-                                                    name={stageTimeName}
-                                                  />
-                                                </Grid>
-                                              </Hidden>
-                                              <Hidden smDown>
-                                                <Grid item xs={3}>
-                                                  <MyTextField
-                                                    placeholder="video url"
-                                                    name={videoUrlName}
-                                                  />
-                                                </Grid>
-                                              </Hidden>
-
-                                              <Grid item xs={3}>
+                                              <Grid item>
                                                 <IconButton
-                                                  size="small"
-                                                  aria-label="delete"
+                                                  aria-label="add"
                                                   onClick={() =>
-                                                    arrayHelpers.remove(index)
+                                                    arrayHelpers.push({
+                                                      name: "",
+                                                      stageTime: "",
+                                                      videoUrl: "",
+                                                      id: "" + Math.random(),
+                                                    })
                                                   }
                                                 >
-                                                  <DeleteIcon />
+                                                  <PersonAddIcon />
                                                 </IconButton>
                                               </Grid>
                                             </Grid>
-                                          );
-                                        })}
-                                      </div>
-                                    </Grid>
-                                  </div>
-                                )}
-                              </FieldArray>
-                            </Grid>
-                          </Grid>
-                        </Grid>
+                                            <div
+                                            // item
+                                            // container
+                                            // xs={12}
+                                            // style={{
+                                            //   border: "5px solid black",
+                                            //   padding: 30,
+                                            // }}
+                                            >
+                                              {values.artists.map((artist, index) => {
+                                                const nameName = `artists.${index}.name`;
+                                                const stageTimeName = `artists.${index}.stageTime`;
+                                                const videoUrlName = `artists.${index}.videoUrl`;
 
-                        <Grid
-                          container
-                          spacing={2}
-                          direction="column"
-                          style={{ marginTop: 15 }}
-                        >
-                          <Grid item>
-                            <MyTextField
-                              placeholder="notes"
-                              name="notes"
-                              type="input"
-                              label="Notes"
-                            />
-                          </Grid>
-                          <Grid item>
-                            <MyTextField
-                              placeholder="price"
-                              name="priceText"
-                              type="input"
-                              label="Price"
-                            />
-                          </Grid>
-                        </Grid>
+                                                return (
+                                                  <Grid
+                                                    item
+                                                    container
+                                                    xs={12}
+                                                    key={artist.id || Math.random()}
+                                                  >
+                                                    <Grid item xs={9} sm={3}>
+                                                      <MyTextField
+                                                        placeholder="artist name"
+                                                        name={nameName}
+                                                      />
+                                                    </Grid>
 
-                        <MyCheckbox
-                          name="isSoldOut"
-                          type="checkbox"
-                          label="Sold Out?"
-                        />
+                                                    <Hidden smDown>
+                                                      <Grid item xs={3}>
+                                                        <MyTextField
+                                                          placeholder="stage time"
+                                                          name={stageTimeName}
+                                                        />
+                                                      </Grid>
+                                                    </Hidden>
+                                                    <Hidden smDown>
+                                                      <Grid item xs={3}>
+                                                        <MyTextField
+                                                          placeholder="video url"
+                                                          name={videoUrlName}
+                                                        />
+                                                      </Grid>
+                                                    </Hidden>
 
-                        <MyCheckbox
-                          name="isCancelled"
-                          type="checkbox"
-                          label="Cancelled?"
-                        />
+                                                    <Grid item xs={3}>
+                                                      <IconButton
+                                                        size="small"
+                                                        aria-label="delete"
+                                                        onClick={() =>
+                                                          arrayHelpers.remove(index)
+                                                        }
+                                                      >
+                                                        <DeleteIcon />
+                                                      </IconButton>
+                                                    </Grid>
+                                                  </Grid>
+                                                );
+                                              })}
+                                            </div>
+                                          </Grid>
+                                        </div>
+                                      )}
+                                    </FieldArray>
+                                  </Grid>
+                                </Grid>
+                              </Grid>
 
-                        <Grid
-                          item
-                          container
-                          justify="flex-end"
-                          style={{ paddingTop: 5 }}
-                        >
-                          <Button
-                            disabled={isSubmitting}
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            size="small"
-                          >
-                            save
+                              <Grid
+                                container
+                                spacing={2}
+                                direction="column"
+                                style={{ marginTop: 15 }}
+                              >
+                                <Grid item>
+                                  <MyTextField
+                                    placeholder="notes"
+                                    name="notes"
+                                    type="input"
+                                    label="Notes"
+                                  />
+                                </Grid>
+                                <Grid item>
+                                  <MyTextField
+                                    placeholder="price"
+                                    name="priceText"
+                                    type="input"
+                                    label="Price"
+                                  />
+                                </Grid>
+                              </Grid>
+
+                              <MyCheckbox
+                                name="isSoldOut"
+                                type="checkbox"
+                                label="Sold Out?"
+                              />
+
+                              <MyCheckbox
+                                name="isCancelled"
+                                type="checkbox"
+                                label="Cancelled?"
+                              />
+
+                              <Grid
+                                item
+                                container
+                                justify="flex-end"
+                                style={{ paddingTop: 5 }}
+                              >
+                                <Button
+                                  disabled={isSubmitting}
+                                  type="submit"
+                                  variant="contained"
+                                  color="primary"
+                                  size="small"
+                                >
+                                  save
                           </Button>
-                        </Grid>
-                      </Form>
-                    </Grid>
-                    {/* <Grid item xs={12} container direction="row">
+                              </Grid>
+                            </Form>
+                          </Grid>
+                          {/* <Grid item xs={12} container direction="row">
                         <Grid item>
                           <pre>{JSON.stringify(values, null, 2)}</pre>
                         </Grid>
@@ -417,16 +418,17 @@ const EditGigDetails: React.FC = () => {
                           <pre>{JSON.stringify(errors, null, 2)}</pre>
                         </Grid>
                       </Grid> */}
-                  </Grid>
-                )}
-              </Formik>
-            </div>
+                        </Grid>
+                      )}
+                  </Formik>
+                </div>
+              </Grid>
+            </Grid>
           </Grid>
-        </Grid>
-      </Grid>
-    </Paper>
-    // </Container>
-  );
+        </Paper>
+      </ThemeProvider>
+      // </Container>
+    );
 };
 
 export default EditGigDetails;
