@@ -196,7 +196,7 @@ const EditGigDetails: React.FC = () => {
         </Grid>
         <Grid item container alignContent="stretch">
           <Grid item xs={12}>
-            <div style={{ margin: 30 }}>
+            <div style={{ margin: 15 }}>
               <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
@@ -382,20 +382,20 @@ const EditGigDetails: React.FC = () => {
                         <MyCheckbox
                           name="isSoldOut"
                           type="checkbox"
-                          label="Is Sold Out?"
+                          label="Sold Out?"
                         />
 
                         <MyCheckbox
                           name="isCancelled"
                           type="checkbox"
-                          label="Is Cancelled?"
+                          label="Cancelled?"
                         />
 
                         <Grid
                           item
                           container
                           justify="flex-end"
-                          style={{ paddingTop: 30 }}
+                          style={{ paddingTop: 15 }}
                         >
                           <Button
                             disabled={isSubmitting}
