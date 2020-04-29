@@ -395,7 +395,7 @@ const EditGigDetails: React.FC = () => {
                           item
                           container
                           justify="flex-end"
-                          style={{ paddingTop: 15 }}
+                          style={{ paddingTop: 5 }}
                         >
                           <Button
                             disabled={isSubmitting}
