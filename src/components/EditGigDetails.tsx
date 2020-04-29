@@ -287,11 +287,14 @@ const EditGigDetails: React.FC = () => {
                                           </IconButton>
                                         </Grid>
                                       </Grid>
-                                      <Grid
-                                        item
-                                        container
-                                        direction="column"
-                                        xs={12}
+                                      <div
+                                        // item
+                                        // container
+                                        // xs={12}
+                                        style={{
+                                          border: "5px solid black",
+                                          padding: 30,
+                                        }}
                                       >
                                         {values.artists.map((artist, index) => {
                                           const nameName = `artists.${index}.name`;
@@ -302,8 +305,8 @@ const EditGigDetails: React.FC = () => {
                                             <Grid
                                               item
                                               container
-                                              key={artist.id || Math.random()}
                                               xs={12}
+                                              key={artist.id || Math.random()}
                                             >
                                               <Grid item xs={9} sm={3}>
                                                 <MyTextField
@@ -343,7 +346,7 @@ const EditGigDetails: React.FC = () => {
                                             </Grid>
                                           );
                                         })}
-                                      </Grid>
+                                      </div>
                                     </Grid>
                                   </div>
                                 )}
