@@ -288,13 +288,13 @@ const EditGigDetails: React.FC = () => {
                                         </Grid>
                                       </Grid>
                                       <div
-                                        // item
-                                        // container
-                                        // xs={12}
-                                        style={{
-                                          border: "5px solid black",
-                                          padding: 30,
-                                        }}
+                                      // item
+                                      // container
+                                      // xs={12}
+                                      // style={{
+                                      //   border: "5px solid black",
+                                      //   padding: 30,
+                                      // }}
                                       >
                                         {values.artists.map((artist, index) => {
                                           const nameName = `artists.${index}.name`;
@@ -359,7 +359,7 @@ const EditGigDetails: React.FC = () => {
                           container
                           spacing={2}
                           direction="column"
-                          style={{ marginTop: 30 }}
+                          style={{ marginTop: 15 }}
                         >
                           <Grid item>
                             <MyTextField
