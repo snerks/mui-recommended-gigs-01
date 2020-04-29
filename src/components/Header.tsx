@@ -1,7 +1,17 @@
 import React from "react";
-import { AppBar, Toolbar, Typography, Switch, Paper } from "@material-ui/core";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Switch,
+  Paper,
+  IconButton,
+  Button,
+} from "@material-ui/core";
 import HighlightIcon from "@material-ui/icons/HighlightOutlined";
+import HomeIcon from "@material-ui/icons/Home";
 import { makeStyles } from "@material-ui/styles";
+import { Link } from "react-router-dom";
 // import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(() => ({
@@ -20,6 +30,10 @@ const Header: React.FC<Props> = ({ isDarkMode, setIsDarkMode }) => {
   return (
     <AppBar position="static">
       <Toolbar>
+        <Button component={Link} to="/">
+          <HomeIcon />
+        </Button>
+
         <Typography className={classes.typographyStyles}>
           Recommended Gigs
         </Typography>
