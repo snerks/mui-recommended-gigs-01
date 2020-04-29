@@ -30,13 +30,13 @@ const Header: React.FC<Props> = ({ isDarkMode, setIsDarkMode }) => {
   return (
     <AppBar position="static">
       <Toolbar>
-        <Button component={Link} to="/">
-          <HomeIcon />
-        </Button>
-
         <Typography className={classes.typographyStyles}>
           Recommended Gigs
         </Typography>
+        <Button component={Link} to="/" size="small">
+          <HomeIcon />
+        </Button>
+
         <Paper title="use this switch for dark/light mode">
           <HighlightIcon />
         </Paper>
