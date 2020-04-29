@@ -31,7 +31,7 @@ const Header: React.FC<Props> = ({ isDarkMode, setIsDarkMode }) => {
     <AppBar position="static">
       <Toolbar>
         <Typography className={classes.typographyStyles}>
-          Recommended Gigs
+          Gigs of Note
         </Typography>
         <Button component={Link} to="/" size="small">
           <HomeIcon />
