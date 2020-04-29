@@ -23,6 +23,10 @@ import {
   CircularProgress,
   IconButton,
   Container,
+  Chip,
+  Badge,
+  Typography,
+  Hidden,
 } from "@material-ui/core";
 import {
   MuiPickersUtilsProvider,
@@ -239,6 +243,129 @@ const EditGigDetails: React.FC = () => {
                                 label="Venue"
                               />
                             </Grid>
+                          </Grid>
+
+                          <Grid
+                            container
+                            direction="column"
+                            style={{ marginTop: 10 }}
+                          >
+                            <Grid item container>
+                              <Grid item xs={12}>
+                                <FieldArray name="artists">
+                                  {(arrayHelpers) => (
+                                    <div>
+                                      <Grid container direction="column">
+                                        <Grid
+                                          item
+                                          container
+                                          justify="flex-start"
+                                          alignItems="center"
+                                          spacing={2}
+                                        >
+                                          <Grid item>
+                                            <Badge
+                                              badgeContent={
+                                                values.artists.length
+                                              }
+                                              color="primary"
+                                            >
+                                              <Typography>Artists</Typography>
+                                            </Badge>
+                                          </Grid>
+                                          <Grid item>
+                                            <IconButton
+                                              aria-label="add"
+                                              onClick={() =>
+                                                arrayHelpers.push({
+                                                  name: "",
+                                                  stageTime: "",
+                                                  videoUrl: "",
+                                                  id: "" + Math.random(),
+                                                })
+                                              }
+                                            >
+                                              <PersonAddIcon />
+                                            </IconButton>
+                                          </Grid>
+                                        </Grid>
+                                        <Grid
+                                          item
+                                          container
+                                          direction="column"
+                                          xs={12}
+                                        >
+                                          {values.artists.map(
+                                            (artist, index) => {
+                                              const nameName = `artists.${index}.name`;
+                                              const stageTimeName = `artists.${index}.stageTime`;
+                                              const videoUrlName = `artists.${index}.videoUrl`;
+
+                                              return (
+                                                <Grid
+                                                  item
+                                                  container
+                                                  key={
+                                                    artist.id || Math.random()
+                                                  }
+                                                  xs={12}
+                                                >
+                                                  <Grid item xs={9} sm={3}>
+                                                    <MyTextField
+                                                      placeholder="artist name"
+                                                      name={nameName}
+                                                    />
+                                                  </Grid>
+
+                                                  <Hidden smDown>
+                                                    <Grid item xs={3}>
+                                                      <MyTextField
+                                                        placeholder="stage time"
+                                                        name={stageTimeName}
+                                                      />
+                                                    </Grid>
+                                                  </Hidden>
+                                                  <Hidden smDown>
+                                                    <Grid item xs={3}>
+                                                      <MyTextField
+                                                        placeholder="video url"
+                                                        name={videoUrlName}
+                                                      />
+                                                    </Grid>
+                                                  </Hidden>
+
+                                                  <Grid item xs={3}>
+                                                    <IconButton
+                                                      size="small"
+                                                      aria-label="delete"
+                                                      onClick={() =>
+                                                        arrayHelpers.remove(
+                                                          index
+                                                        )
+                                                      }
+                                                    >
+                                                      <DeleteIcon />
+                                                    </IconButton>
+                                                  </Grid>
+                                                </Grid>
+                                              );
+                                            }
+                                          )}
+                                        </Grid>
+                                      </Grid>
+                                    </div>
+                                  )}
+                                </FieldArray>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+
+                          <Grid
+                            container
+                            spacing={2}
+                            direction="column"
+                            style={{ marginTop: 30 }}
+                          >
                             <Grid item>
                               <MyTextField
                                 placeholder="notes"
@@ -270,128 +397,20 @@ const EditGigDetails: React.FC = () => {
                           />
 
                           <Grid
+                            item
                             container
-                            direction="column"
-                            style={{ marginTop: 10 }}
+                            justify="flex-end"
+                            style={{ paddingTop: 30 }}
                           >
-                            <Grid item>Artists</Grid>
-                            <Grid item container>
-                              <Grid item xs={12}>
-                                <FieldArray name="artists">
-                                  {(arrayHelpers) => (
-                                    <div>
-                                      <Grid container direction="column">
-                                        <Grid item container justify="flex-end">
-                                          <IconButton
-                                            aria-label="add"
-                                            onClick={() =>
-                                              arrayHelpers.push({
-                                                name: "",
-                                                stageTime: "",
-                                                videoUrl: "",
-                                                id: "" + Math.random(),
-                                              })
-                                            }
-                                          >
-                                            <PersonAddIcon />
-                                          </IconButton>
-                                        </Grid>
-                                        <Grid
-                                          item
-                                          container
-                                          direction="column"
-                                          justify="space-between"
-                                          xs={12}
-                                        >
-                                          {values.artists.map(
-                                            (artist, index) => {
-                                              const nameName = `artists.${index}.name`;
-                                              const stageTimeName = `artists.${index}.stageTime`;
-                                              const videoUrlName = `artists.${index}.videoUrl`;
-
-                                              return (
-                                                <Grid
-                                                  item
-                                                  container
-                                                  key={
-                                                    artist.id || Math.random()
-                                                  }
-                                                  justify="space-evenly"
-                                                  alignContent="stretch"
-                                                >
-                                                  <Grid item>
-                                                    <MyTextField
-                                                      placeholder="artist name"
-                                                      name={nameName}
-                                                    />
-                                                  </Grid>
-
-                                                  <Grid item>
-                                                    <MyTextField
-                                                      placeholder="stage time"
-                                                      name={stageTimeName}
-                                                    />
-                                                  </Grid>
-
-                                                  <Grid item>
-                                                    <MyTextField
-                                                      placeholder="video url"
-                                                      name={videoUrlName}
-                                                    />
-                                                  </Grid>
-
-                                                  <Grid item>
-                                                    <IconButton
-                                                      size="small"
-                                                      aria-label="delete"
-                                                      onClick={() =>
-                                                        arrayHelpers.remove(
-                                                          index
-                                                        )
-                                                      }
-                                                    >
-                                                      <DeleteIcon />
-                                                    </IconButton>
-                                                  </Grid>
-                                                </Grid>
-                                              );
-                                            }
-                                          )}
-                                        </Grid>
-                                      </Grid>
-                                    </div>
-                                  )}
-                                </FieldArray>
-                              </Grid>
-                            </Grid>
-                            {/* <Grid item container >
-                              <div style={{ paddingTop: 30 }}>
-                                <Button
-                                  disabled={isSubmitting}
-                                  type="submit"
-                                  variant="contained"
-                                  color="primary"
-                                >
-                                  submit
-                                </Button>
-                              </div>
-                            </Grid> */}
-                            <Grid
-                              item
-                              container
-                              justify="flex-end"
-                              style={{ paddingTop: 30 }}
+                            <Button
+                              disabled={isSubmitting}
+                              type="submit"
+                              variant="contained"
+                              color="primary"
+                              size="small"
                             >
-                              <Button
-                                disabled={isSubmitting}
-                                type="submit"
-                                variant="contained"
-                                color="primary"
-                                size="small"
-                              >
-                                save
-                              </Button>
-                            </Grid>
+                              save
+                            </Button>
                           </Grid>
                         </Form>
                       </Grid>
