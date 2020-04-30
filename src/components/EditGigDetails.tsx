@@ -569,14 +569,14 @@ const EditGigDetails: React.FC<Props> = ({ isDarkMode, setIsDarkMode, history })
                             </Grid>
                           </Form>
                         </Grid>
-                        <Grid item xs={12} container direction="column">
+                        {/* <Grid item xs={12} container direction="column">
                           <Grid item>
                             <pre>{JSON.stringify(values, null, 2)}</pre>
                           </Grid>
                           <Grid item>
                             <pre>{JSON.stringify(errors, null, 2)}</pre>
                           </Grid>
-                        </Grid>
+                        </Grid> */}
                       </Grid>
                     )}
                 </Formik>
