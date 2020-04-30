@@ -54,7 +54,14 @@ const App: React.FC = () => {
           <Route path="/gigdetails/:id" render={() => <GigDetails />} />
           <Route
             path="/editgigdetails/:id?"
-            render={() => <EditGigDetails isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />}
+            render={({ history, location, match }) => (
+              <EditGigDetails
+                isDarkMode={isDarkMode}
+                setIsDarkMode={setIsDarkMode}
+                history={history}
+                location={location}
+                match={match} />
+            )}
           />
 
           {/* <Route path="/" render={() => <div>404</div>} /> */}

@@ -49,9 +49,10 @@ import { blue } from "@material-ui/core/colors";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-import Header from "./Header";
+import { useParams, RouteComponentProps } from "react-router-dom";
+import { v4 } from "uuid";
 
-import { useParams } from "react-router-dom";
+import Header from "./Header";
 import { ShowsInfo, Show } from "../models/models";
 
 type MyRadioProps = { label: string } & FieldAttributes<{}>;
@@ -113,7 +114,7 @@ const validationSchema = yup.object({
   ),
 });
 
-interface Props {
+interface Props extends RouteComponentProps<{}> {
   isDarkMode: boolean;
   setIsDarkMode: Function;
 }
@@ -122,7 +123,7 @@ interface RouteParams {
   id?: string;
 }
 
-const EditGigDetails: React.FC<Props> = ({ isDarkMode, setIsDarkMode }) => {
+const EditGigDetails: React.FC<Props> = ({ isDarkMode, setIsDarkMode, history }) => {
   const routeParams = useParams<RouteParams>();
 
   // const [isDarkMode, setIsDarkMode] = useState(true);
@@ -151,7 +152,7 @@ const EditGigDetails: React.FC<Props> = ({ isDarkMode, setIsDarkMode }) => {
 
       // https://firebase.google.com/docs/firestore/use-rest-api#making_rest_calls
       // https://firebase.google.com/docs/reference/rest/database/
-      const url = `https://show01-cd72d.firebaseio.com/.json`;
+      const url = `https://show01-cd72d.firebaseio.com/.json?print=pretty`;
 
       const responseJson = await fetch(url);
 
@@ -166,6 +167,152 @@ const EditGigDetails: React.FC<Props> = ({ isDarkMode, setIsDarkMode }) => {
     fetchShowsInfo();
   }, []);
 
+  const sortShows = (showsInfo: ShowsInfo): void => {
+    showsInfo.shows.sort((lhs: Show, rhs: Show) => {
+      const lhsDate = new Date(lhs.date);
+      const rhsDate = new Date(rhs.date);
+
+      // const result = lhsDate.getTime() - rhsDate.getTime();
+      const lhsTime = lhsDate.getTime();
+      const rhsTime = rhsDate.getTime();
+
+      if (lhsTime === rhsTime) {
+        if (lhs.id === undefined && rhs.id === undefined) {
+          return 0;
+        }
+
+        if (lhs.id === undefined) {
+          return -1;
+        }
+
+        if (rhs.id === undefined) {
+          return 1;
+        }
+
+        return lhs.id < rhs.id ? -1 : lhs.id > rhs.id ? 1 : 0;
+      } else {
+        return lhsTime - rhsTime;
+      }
+    });
+  }
+
+  const putShowsInfo = async (showsInfo: ShowsInfo) => {
+    const url = `https://show01-cd72d.firebaseio.com/.json`;
+
+    // const responseJson = await fetch(url);
+
+    // const response: ShowsInfo = await responseJson.json();
+
+    const putMethod = {
+      method: 'PUT', // Method itself
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8' // Indicates the content 
+      },
+      body: JSON.stringify(showsInfo) // We send data in JSON format
+    };
+
+    fetch(url, putMethod)
+      .then(response => response.json())
+      .then(data => {
+        console.log("PUT Success", data);
+        history.goBack();
+      }) // Manipulate the data retrieved back, if we want to do something with it
+      .catch(err => console.log("PUT error", err)); // Do something with the error
+  }
+
+  const submitShow = (show: Show) => {
+    // setIsLoading(true);
+    // this.errorMessage = null;
+
+    // const showJson = this.profileFormJson;
+    // const show = JSON.parse(showJson);
+
+    console.log("submitShow", show);
+
+    const isCleanupRequired = false;
+    // 8ace1534-45fe-44e6-8889-c8175095e20c
+    // 0b053262-6da0-4fd0-b3bf-e293e897ecec
+    if (isCleanupRequired) {
+      const cleanupShowIndex = showsInfo.shows.findIndex(showCandidate => showCandidate.id === "0b053262-6da0-4fd0-b3bf-e293e897ecec");
+
+      if (cleanupShowIndex > -1) {
+        showsInfo.shows[cleanupShowIndex].addedDate = new Date("2020-01-14");
+      }
+    }
+
+    const isNewShow = !show.id;
+
+    if (isNewShow) {
+      show.id = v4();
+      show.addedDate = new Date(new Date().toISOString().substring(0, 10));
+    }
+
+    const existingShowIndex = showsInfo.shows.findIndex(showCandidate => showCandidate.id === show.id);
+
+    if (!isNewShow) {
+      showsInfo.shows[existingShowIndex] = { ...show };
+      showsInfo.shows[existingShowIndex].artists = [...show.artists];
+    }
+
+    const existingShow = showsInfo.shows[existingShowIndex];
+    console.log("Submit Show", existingShow);
+
+    let nextShow = isNewShow ? show : showsInfo.shows[existingShowIndex];
+
+    if (nextShow) {
+      nextShow.date = new Date(new Date(nextShow.date).toISOString().substring(0, 10));
+
+      if (nextShow.notes !== undefined) {
+        nextShow.notes = nextShow.notes.trim() === "" ? undefined : nextShow.notes.trim();
+      }
+
+      if (nextShow.priceText !== undefined) {
+
+        nextShow.priceText = nextShow.priceText.trim() === "" ? undefined : nextShow.priceText.trim();
+      }
+
+      nextShow.artists = nextShow.artists.map(artist => {
+        const nextArtist = { ...artist };
+
+        if (artist.stageTime !== undefined) {
+          nextArtist.stageTime = artist.stageTime.trim() === "" ? undefined : artist.stageTime.trim();
+        }
+
+        if (artist.videoUrl !== undefined) {
+          nextArtist.videoUrl = artist.videoUrl.trim() === "" ? undefined : artist.videoUrl.trim();
+        }
+
+        nextArtist.id = undefined;
+
+        return nextArtist;
+      });
+    }
+
+    const nextShows =
+      isCleanupRequired ?
+        [...showsInfo.shows.filter(show => show.id !== "8ace1534-45fe-44e6-8889-c8175095e20c")]
+        : [...showsInfo.shows];
+
+    const nextShowsInfo = {
+      ...showsInfo,
+      shows: [...nextShows]
+    };
+
+    nextShowsInfo.lastUpdated = new Date(new Date().toISOString().substring(0, 10));
+
+    if (isNewShow && nextShow) {
+      nextShowsInfo.shows.push(nextShow);
+      sortShows(nextShowsInfo);
+    }
+
+    putShowsInfo(nextShowsInfo);
+    // console.log("submitShow: nextShowsInfo", JSON.stringify(nextShowsInfo, null, 2));
+
+    // history.goBack();
+
+    // setShowsInfo(nextShowsInfo);
+  }
+
   const getShowById = (id: string) => {
     const idMatch = showsInfo.shows.find((show) => show.id && show.id === id);
 
@@ -177,6 +324,7 @@ const EditGigDetails: React.FC<Props> = ({ isDarkMode, setIsDarkMode }) => {
   const initialValues: Show = show
     ? show
     : {
+      // id: v4(),
       addedDate: new Date(),
       venue: "",
       date: new Date(),
@@ -189,7 +337,9 @@ const EditGigDetails: React.FC<Props> = ({ isDarkMode, setIsDarkMode }) => {
       ],
     };
 
-  const theme = useTheme();
+  console.log("initialValues", initialValues);
+
+  // const theme = useTheme();
 
   return isLoading ? (
     <Backdrop open={true}>
@@ -214,6 +364,7 @@ const EditGigDetails: React.FC<Props> = ({ isDarkMode, setIsDarkMode }) => {
 
                     // Make async call
                     console.log("submit", data);
+                    submitShow(data);
 
                     setSubmitting(false);
                   }}
@@ -418,14 +569,14 @@ const EditGigDetails: React.FC<Props> = ({ isDarkMode, setIsDarkMode }) => {
                             </Grid>
                           </Form>
                         </Grid>
-                        {/* <Grid item xs={12} container direction="row">
-                        <Grid item>
-                          <pre>{JSON.stringify(values, null, 2)}</pre>
+                        <Grid item xs={12} container direction="column">
+                          <Grid item>
+                            <pre>{JSON.stringify(values, null, 2)}</pre>
+                          </Grid>
+                          <Grid item>
+                            <pre>{JSON.stringify(errors, null, 2)}</pre>
+                          </Grid>
                         </Grid>
-                        <Grid item>
-                          <pre>{JSON.stringify(errors, null, 2)}</pre>
-                        </Grid>
-                      </Grid> */}
                       </Grid>
                     )}
                 </Formik>

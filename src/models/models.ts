@@ -32,7 +32,7 @@ export interface Artist {
 
   videoUrl?: string;
 
-  id: string;
+  id?: string;
 }
 
 export interface VenueBts {
