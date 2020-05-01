@@ -135,15 +135,29 @@ const Home: React.FC<Props> = ({ isDarkMode, setIsDarkMode }) => {
 
   useEffect(() => {
     const fetchShowsInfo = async () => {
-      console.log("fetchShowsInfo");
+      // console.log("fetchShowsInfo");
 
-      const url = `https://show01-cd72d.firebaseio.com/.json`;
+      const url = `https://show01-cd72d.firebaseio.com/.json?print=pretty`;
 
       const responseJson = await fetch(url);
 
       const response: ShowsInfo = await responseJson.json();
 
-      console.log("fetchShowsInfo", "response", response);
+      // console.log("fetchShowsInfo", "response", response);
+
+      // 36975dc3-5479-468b-abd2-b5407c01a695
+      const isCleanupRequired = true;
+
+      if (isCleanupRequired) {
+        const filteredResponse: ShowsInfo = {
+          lastUpdated: response.lastUpdated,
+          shows: [...response.shows.filter(show => show.id !== "36975dc3-5479-468b-abd2-b5407c01a695")]
+        };
+
+        setShowsInfo(filteredResponse);
+        setIsLoading(false);
+        return;
+      }
 
       setShowsInfo(response);
       setIsLoading(false);
@@ -167,124 +181,124 @@ const Home: React.FC<Props> = ({ isDarkMode, setIsDarkMode }) => {
               <CircularProgress color="inherit" />
             </Backdrop>
           ) : (
-            <Grid
-              item
-              container
-              direction="column"
-              spacing={2}
-              justify="center"
-              alignItems="stretch"
-            >
-              <Grid item>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  component={Link}
-                  to={"/giglist/false"}
-                  fullWidth
-                >
-                  <span>Future Events</span>&nbsp;{" "}
-                  <Chip
-                    variant="default"
-                    color="secondary"
-                    size="small"
-                    label={getFutureShows().length}
-                  />
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  component={Link}
-                  to={"/giglist/false/1"}
-                  fullWidth
-                >
-                  <div
-                    className={
-                      haveEventsAddedToday
-                        ? styles.addedTodayNonZero
-                        : undefined
-                    }
+              <Grid
+                item
+                container
+                direction="column"
+                spacing={2}
+                justify="center"
+                alignItems="stretch"
+              >
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    component={Link}
+                    to={"/giglist/false"}
+                    fullWidth
                   >
-                    Added Today&nbsp;
+                    <span>Future Events</span>&nbsp;{" "}
+                    <Chip
+                      variant="default"
+                      color="secondary"
+                      size="small"
+                      label={getFutureShows().length}
+                    />
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    component={Link}
+                    to={"/giglist/false/1"}
+                    fullWidth
+                  >
+                    <div
+                      className={
+                        haveEventsAddedToday
+                          ? styles.addedTodayNonZero
+                          : undefined
+                      }
+                    >
+                      Added Today&nbsp;
+                    <Chip
+                        variant="default"
+                        color="primary"
+                        size="small"
+                        label={eventsAddedTodayCount}
+                      />
+                    </div>
+                    {/* {isLoading ? null : <span>&nbsp;({getAddedTodayShows().length})</span>} */}
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    component={Link}
+                    to={"/giglist/false/3"}
+                    fullWidth
+                  >
+                    <span>Added In Last 3 Days</span>&nbsp;
+                  {/* {isLoading ? null : <span>&nbsp;({getAddedWithin3DaysShows().length})</span>} */}
                     <Chip
                       variant="default"
                       color="primary"
                       size="small"
-                      label={eventsAddedTodayCount}
+                      label={getAddedWithin3DaysShows().length}
                     />
-                  </div>
-                  {/* {isLoading ? null : <span>&nbsp;({getAddedTodayShows().length})</span>} */}
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  component={Link}
-                  to={"/giglist/false/3"}
-                  fullWidth
-                >
-                  <span>Added In Last 3 Days</span>&nbsp;
-                  {/* {isLoading ? null : <span>&nbsp;({getAddedWithin3DaysShows().length})</span>} */}
-                  <Chip
-                    variant="default"
-                    color="primary"
-                    size="small"
-                    label={getAddedWithin3DaysShows().length}
-                  />
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  component={Link}
-                  to={"/giglist/false/7"}
-                  fullWidth
-                >
-                  <span>Added In Last 7 Days</span>&nbsp;
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    component={Link}
+                    to={"/giglist/false/7"}
+                    fullWidth
+                  >
+                    <span>Added In Last 7 Days</span>&nbsp;
                   {/* {isLoading ? null : <span>&nbsp;({getAddedWithin7DaysShows().length})</span>} */}
-                  <Chip
-                    variant="default"
-                    color="primary"
-                    size="small"
-                    label={getAddedWithin7DaysShows().length}
-                  />
+                    <Chip
+                      variant="default"
+                      color="primary"
+                      size="small"
+                      label={getAddedWithin7DaysShows().length}
+                    />
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    component={Link}
+                    to={"/giglist/true/-1"}
+                    fullWidth
+                  >
+                    <span>All Events</span>&nbsp;{" "}
+                    <Chip
+                      variant="default"
+                      color="primary"
+                      size="small"
+                      label={getAllShows().length}
+                    />
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    component={Link}
+                    to={"/editgigdetails/"}
+                    fullWidth
+                    startIcon={<PlaylistAddIcon />}
+                  >
+                    <span>Add</span>&nbsp;
                 </Button>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  component={Link}
-                  to={"/giglist/true/-1"}
-                  fullWidth
-                >
-                  <span>All Events</span>&nbsp;{" "}
-                  <Chip
-                    variant="default"
-                    color="primary"
-                    size="small"
-                    label={getAllShows().length}
-                  />
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  component={Link}
-                  to={"/editgigdetails/"}
-                  fullWidth
-                  startIcon={<PlaylistAddIcon />}
-                >
-                  <span>Add</span>&nbsp;
-                </Button>
-              </Grid>
-            </Grid>
-          )}
+            )}
         </Grid>
       </Paper>
     </ThemeProvider>

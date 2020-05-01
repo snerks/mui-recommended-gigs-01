@@ -16,7 +16,7 @@ import {
   Chip,
   Grid,
   Hidden,
-  Button,
+  // Button,
   IconButton,
   TextField,
 } from "@material-ui/core";
@@ -305,6 +305,21 @@ const DenseTable: React.FC<Props> = (props) => {
       const response: ShowsInfo = await responseJson.json();
 
       // console.log("fetchShowsInfo", "response", response);
+
+      // 36975dc3-5479-468b-abd2-b5407c01a695
+      const isCleanupRequired = true;
+
+      if (isCleanupRequired) {
+        const filteredResponse: ShowsInfo = {
+          lastUpdated: response.lastUpdated,
+          shows: [...response.shows.filter(show => show.id !== "36975dc3-5479-468b-abd2-b5407c01a695")]
+        };
+
+        setShowsInfo(filteredResponse);
+        setDateRelevantShows(getDateRelevantShows(filteredResponse.shows));
+        setIsLoading(false);
+        return;
+      }
 
       setShowsInfo(response);
       setDateRelevantShows(getDateRelevantShows(response.shows));

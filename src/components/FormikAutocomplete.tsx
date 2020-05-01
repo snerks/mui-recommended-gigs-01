@@ -1,7 +1,7 @@
 import { TextField, TextFieldProps } from "@material-ui/core";
 import {
   Autocomplete,
-  AutocompleteInputChangeReason,
+  // AutocompleteInputChangeReason,
   AutocompleteProps,
   createFilterOptions,
   FilterOptionsState,
@@ -15,64 +15,11 @@ const AnyAutocomplete = Autocomplete as any;
 export interface FormikAutocompleteProps<
   V extends any = any,
   FormValues extends any = any
-> extends FieldProps<V, FormValues>, AutocompleteProps<V> {
+  > extends FieldProps<V, FormValues>, AutocompleteProps<V> {
   textFieldProps: TextFieldProps;
 }
 
-const noOp = () => {};
-
-// const FormikAutocomplete = <V extends any = any, FormValues extends any = any>({
-//   textFieldProps,
-//   ...props
-// }: FormikAutocompleteProps<V, FormValues>) => {
-//   const {
-//     form: { setTouched, setFieldValue, touched },
-//   } = props;
-//   const { error, helperText, ...field } = fieldToTextField(props as any);
-//   const { name } = field;
-//   const onInputChangeDefault = props.onInputChange ?? noOp;
-//   const onInputChange = !props.freeSolo
-//     ? props.onInputChange
-//     : (
-//         event: React.ChangeEvent<{}>,
-//         value: string,
-//         reason: AutocompleteInputChangeReason
-//       ) => {
-//         setFieldValue(name!, value);
-//         onInputChangeDefault(event, value, reason);
-//       };
-
-//   // const customOnInputChange = (
-//   //   event: React.ChangeEvent<{}>,
-//   //   value: string,
-//   //   reason: AutocompleteInputChangeReason
-//   // ) => {
-//   //   setFieldValue(name!, value);
-//   //   onInputChangeDefault(event, value, reason);
-//   // };
-
-//   // const onInputChange = props.onInputChange || customOnInputChange;
-
-//   return (
-//     <AnyAutocomplete
-//       {...props}
-//       {...field}
-//       onChange={(_: any, value: any, reason: string) =>
-//         setFieldValue(name!, value)
-//       }
-//       onInputChange={onInputChange}
-//       onBlur={() => setTouched({ ...touched, [name!]: true })}
-//       renderInput={(props: any) => (
-//         <TextField
-//           {...props}
-//           {...textFieldProps}
-//           helperText={helperText}
-//           error={error}
-//         />
-//       )}
-//     />
-//   );
-// };
+// const noOp = () => { };
 
 export interface StringOptionType {
   inputValue?: string;
@@ -85,10 +32,11 @@ const FormikAutocomplete = <V extends any = any, FormValues extends any = any>({
   textFieldProps,
   ...props
 }: FormikAutocompleteProps<V, FormValues>) => {
-  const [value, setValue] = React.useState<StringOptionType | null>(null);
+  // const [value, setValue] = React.useState<StringOptionType | null>(null);
 
   const {
-    form: { setTouched, setFieldValue, touched },
+    // form: { setTouched, setFieldValue, touched },
+    form: { setFieldValue },
   } = props;
   const { error, helperText, ...field } = fieldToTextField(props as any);
   const { name } = field;
@@ -118,7 +66,7 @@ const FormikAutocomplete = <V extends any = any, FormValues extends any = any>({
           return;
         }
 
-        setFieldValue(name!, newValue || "");
+        setFieldValue(name!, newValue ? newValue.text || "" : "");
       }}
       filterOptions={(
         options: StringOptionType[],
