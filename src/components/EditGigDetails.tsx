@@ -742,12 +742,12 @@ const EditGigDetails: React.FC<Props> = ({
                           </Form>
                         </Grid>
                         <Grid item xs={12} container direction="column">
-                          <Grid item>
+                          {/* <Grid item>
                             <pre>{JSON.stringify(values, null, 2)}</pre>
                           </Grid>
                           <Grid item>
                             <pre>{JSON.stringify(errors, null, 2)}</pre>
-                          </Grid>
+                          </Grid> */}
                           {/* <Grid item>
                         <pre>{JSON.stringify(knownVenues, null, 2)}</pre>
                       </Grid>
