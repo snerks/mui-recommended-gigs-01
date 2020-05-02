@@ -418,9 +418,9 @@ const EditGigDetails: React.FC<Props> = ({
 
     if (isNewShow && nextShow) {
       nextShowsInfo.shows.push(nextShow);
-      sortShows(nextShowsInfo);
-    }
 
+    }
+    sortShows(nextShowsInfo);
     putShowsInfo(nextShowsInfo);
     // console.log("submitShow: nextShowsInfo", JSON.stringify(nextShowsInfo, null, 2));
 

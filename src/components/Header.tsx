@@ -10,6 +10,7 @@ import {
 } from "@material-ui/core";
 import HighlightIcon from "@material-ui/icons/HighlightOutlined";
 import HomeIcon from "@material-ui/icons/Home";
+import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import { makeStyles } from "@material-ui/styles";
 import { Link } from "react-router-dom";
 // import { Link } from "react-router-dom";
@@ -35,6 +36,14 @@ const Header: React.FC<Props> = ({ isDarkMode, setIsDarkMode }) => {
         </Typography>
         <Button component={Link} to="/" size="small">
           <HomeIcon />
+        </Button>
+        <Button
+          size="small"
+          component={Link}
+          to={"/editgigdetails/"}
+
+        >
+          <PlaylistAddIcon />
         </Button>
 
         <Paper title="use this switch for dark/light mode">
