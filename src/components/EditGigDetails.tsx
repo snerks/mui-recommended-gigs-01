@@ -134,7 +134,6 @@ const MyTextField: React.FC<MyTextFieldProps> = ({
 //     />
 //   );
 // };
-
 const validationSchema = yup.object({
   venue: yup.string().required(),
   date: yup.date().required(),
@@ -142,7 +141,7 @@ const validationSchema = yup.object({
     yup.object({
       name: yup.string().required(),
     })
-  ),
+  ).required("please add at least one artist"),
 });
 
 interface Props extends RouteComponentProps<{}> {
@@ -503,7 +502,7 @@ const EditGigDetails: React.FC<Props> = ({
                                     component={KeyboardDatePicker}
                                     autoOk
                                     name="date"
-                                    label="Event Date"
+                                    label={`Event Date ${values.date.getUTCDate() <= new Date().getUTCDate() ? " : (FYI: Date is not in the future!!!)" : ""}`}
                                     disableToolbar
                                     variant="inline"
                                     format="dd MMMM yyyy"
@@ -572,6 +571,7 @@ const EditGigDetails: React.FC<Props> = ({
                                               <Badge
                                                 badgeContent={values.artists.length}
                                                 color="primary"
+                                                showZero
                                               >
                                                 <Typography>Artists</Typography>
                                               </Badge>
@@ -591,6 +591,13 @@ const EditGigDetails: React.FC<Props> = ({
                                                 <PersonAddIcon />
                                               </IconButton>
                                             </Grid>
+                                            <Grid item>
+                                              {
+                                                errors && errors.artists && (typeof errors.artists === "string") &&
+                                                <p style={{ color: "red", fontSize: "0.75rem", fontWeight: 400 }}>{errors.artists}</p>
+                                              }
+                                              {/* <span style={{ color: "red" }}>{errors.artists}</span> */}
+                                            </Grid>
                                           </Grid>
                                           <div
                                           // item
@@ -604,7 +611,7 @@ const EditGigDetails: React.FC<Props> = ({
                                             {values.artists.map((artist, index) => {
                                               const nameName = `artists.${index}.name`;
                                               const stageTimeName = `artists.${index}.stageTime`;
-                                              const videoUrlName = `artists.${index}.videoUrl`;
+                                              // const videoUrlName = `artists.${index}.videoUrl`;
 
                                               return (
                                                 <Grid
@@ -612,8 +619,9 @@ const EditGigDetails: React.FC<Props> = ({
                                                   container
                                                   xs={12}
                                                   key={artist.id || Math.random()}
+                                                  spacing={2}
                                                 >
-                                                  <Grid item xs={9} sm={3}>
+                                                  <Grid item xs={9} sm={6}>
                                                     {/* <MyTextField
                                                   placeholder="artist name"
                                                   name={nameName}
@@ -647,14 +655,14 @@ const EditGigDetails: React.FC<Props> = ({
                                                       />
                                                     </Grid>
                                                   </Hidden>
-                                                  <Hidden smDown>
+                                                  {/* <Hidden smDown>
                                                     <Grid item xs={3}>
                                                       <MyTextField
                                                         placeholder="video url"
                                                         name={videoUrlName}
                                                       />
                                                     </Grid>
-                                                  </Hidden>
+                                                  </Hidden> */}
 
                                                   <Grid item xs={3}>
                                                     <IconButton
@@ -734,12 +742,12 @@ const EditGigDetails: React.FC<Props> = ({
                           </Form>
                         </Grid>
                         <Grid item xs={12} container direction="column">
-                          {/* <Grid item>
+                          <Grid item>
                             <pre>{JSON.stringify(values, null, 2)}</pre>
                           </Grid>
                           <Grid item>
                             <pre>{JSON.stringify(errors, null, 2)}</pre>
-                          </Grid> */}
+                          </Grid>
                           {/* <Grid item>
                         <pre>{JSON.stringify(knownVenues, null, 2)}</pre>
                       </Grid>
