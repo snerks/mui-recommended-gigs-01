@@ -496,13 +496,16 @@ const EditGigDetails: React.FC<Props> = ({
                         <Grid item xs={12}>
                           <Form>
                             <Grid container spacing={2} direction="column">
+                              {/* <Grid item>
+                                {JSON.stringify(values.date)}
+                              </Grid> */}
                               <Grid item>
                                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                   <Field
                                     component={KeyboardDatePicker}
                                     autoOk
                                     name="date"
-                                    label={`Event Date ${values.date.getUTCDate() <= new Date().getUTCDate() ? " : (FYI: Date is not in the future!!!)" : ""}`}
+                                    label={`Event Date ${new Date(values.date).getUTCDate() <= new Date().getUTCDate() ? " : (FYI: Date is not in the future!!!)" : ""}`}
                                     disableToolbar
                                     variant="inline"
                                     format="dd MMMM yyyy"
